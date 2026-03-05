@@ -3,6 +3,7 @@
 #include <vector>
 #include "renderer/Vertex.hpp"
 #include "renderer/Textures.hpp"
+#include "renderer/Shader.hpp"
 
 class Mesh {
 private:
@@ -18,4 +19,5 @@ public:
        std::vector<Texture> textures);
 
   void setupMesh();
+  void draw(Shader& shader);
 };

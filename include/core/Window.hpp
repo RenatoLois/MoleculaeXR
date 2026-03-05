@@ -50,4 +50,6 @@ public:
 
   void pollEvents();  
   void swapBuffers();
+
+  double getCurrentTime();
 };

@@ -13,7 +13,7 @@ Vision::Vision(int cameraID) {
 void Vision::open() {
   if( this->stream.isOpened() )
     throw std::runtime_error("camera already opened");
-  if( !this->stream.open(this->cameraID) ) {
+  if( !this->stream.open(this->cameraID, cv::CAP_V4L2) ) {
 /*
     if( this->stream.isOpened() )
 */
@@ -47,4 +47,3 @@ bool Vision::read() {
 cv::Mat Vision::getFramebuffer() {
   return this->framebuffer;
 }
-

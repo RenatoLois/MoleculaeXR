@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <cstdlib>
 #include <iostream>
+#include <stdexcept>
 
 #include "core/Window.hpp"
 
@@ -64,7 +65,10 @@ int Window::init() {
 
   glfwMakeContextCurrent(this->window);
     
-  gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+  if( !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress) ) {
+    throw std::runtime_error("failed to initialize glad");
+    return 1;
+  }
 
   return 0;
 
@@ -91,6 +95,8 @@ int Window::destroy() {
 
 
 
+// assuming this->window != NULL
+
 bool Window::isVisible() const {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
@@ -98,6 +104,10 @@ bool Window::isVisible() const {
 #endif
 }
 
+
+
+
+// assuming this->window != NULL
 void Window::setVisible(bool visible) {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
@@ -118,10 +128,31 @@ void Window::pollEvents() {
 
 
 
+// assuming this->window != NULL
+void Window::swapBuffers() {
+#if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
+#elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
+  glfwSwapBuffers(this->window);
+#endif
+}
+
+
+
+
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 SDL_window* Window::getWindow() const {
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
 GLFWwindow* Window::getWindow() const {
 #endif
   return this->window;
+}
+
+
+
+
+double Window::getCurrentTime() {
+#if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
+#elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
+  return glfwGetTime();
+#endif
 }

@@ -19,14 +19,18 @@ set( GLAD_SRC
   external/glad/src/glad.c
 )
 
+file ( GLOB_RECURSE STB_SRC
+  external/stb/src/stb_image_implementation.cpp
+  external/stb/src/stb_image_resize_implementation.cpp
+)
+
 file(GLOB_RECURSE SOURCE_FILES
     src/*.cpp
-    src/*.c
 )
 
 
-file(GLOB RESOURCES    res/*.png res/*.jpg res/*.jpeg)
-file(GLOB SHADERS      src/shaders/*.glsl)
+file(GLOB RESOURCES    res/assets/*.png res/assets/*.jpg res/assets/*.jpeg)
+file(GLOB SHADERS      res/shaders/*.glsl)
 
 set(ALL_LISTS_TO_COPY ${RESOURCES} ${SHADERS})
 
@@ -44,10 +48,17 @@ add_executable( MoleculaeXR
   ${MAIN_FILE}
   ${SOURCE_FILES}
   ${GLAD_SRC}
+  ${STB_SRC}
 )
 
 find_package(glfw3 3.3 REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED REQUIRED core imgproc highgui videoio)
 target_link_libraries(MoleculaeXR PRIVATE glfw m ${OpenCV_LIBS})
 
 include_directories(${OpenCV_INCLUDE_DIRS})
+
+target_precompile_headers(MoleculaeXR PRIVATE
+    "$<$<COMPILE_LANGUAGE:CXX>:<stb/stb_image.h>>"
+    "$<$<COMPILE_LANGUAGE:CXX>:<stb/stb_image_resize.h>>"
+    "$<$<COMPILE_LANGUAGE:CXX>:<opencv2/opencv.hpp>>"
+)

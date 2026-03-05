@@ -1,4 +1,5 @@
 #include "renderer/Shader.hpp"
+#include <iostream>
 #include <stdexcept>
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,6 +47,9 @@ GLchar* read_shader(const char* filename) {
     
     return charBuffer;
 }
+
+
+
 
 Shader::Shader(const char *vtxShaderFilepath, const char *frgShaderFilepath) {
   GLchar const* vtxShaderFileBuffer = read_shader(vtxShaderFilepath);
@@ -112,4 +116,26 @@ Shader::Shader(const char *vtxShaderFilepath, const char *frgShaderFilepath) {
 
   glDeleteShader(vtxShaderId);
   glDeleteShader(frgShaderId);
+}
+
+
+
+
+void Shader::setInt(const char* uniform_name, int value) {
+  int location = glGetUniformLocation(this->programID, uniform_name);
+  if(location == -1) {
+    std::cerr << "Warning: uniform '" << uniform_name << "' not found!\n";
+  }
+  glUniform1i(location, value);
+}
+
+
+
+
+void Shader::setFloat(const char* uniform_name, float value) {
+  int location = glGetUniformLocation(this->programID, uniform_name);
+  if(location == -1) {
+    std::cerr << "Warning: uniform '" << uniform_name << "' not found!\n";
+  }
+  glUniform1f(location, value);
 }

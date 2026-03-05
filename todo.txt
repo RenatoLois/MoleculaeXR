@@ -1,0 +1,1 @@
+implement Texture load(..., powerof2=true);
