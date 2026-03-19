@@ -1,5 +1,7 @@
 #pragma once
 
+// precompiled header
+
 #include <stb/stb_image.h>
 #include <stb/stb_image_resize.h>
 #include <glad/glad.h>
