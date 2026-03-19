@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <glm/gtc/type_ptr.hpp>
+
 
 GLchar* read_shader(const char* filename) {
     FILE* file = fopen(filename, "rb");
@@ -121,21 +123,45 @@ Shader::Shader(const char *vtxShaderFilepath, const char *frgShaderFilepath) {
 
 
 
-void Shader::setInt(const char* uniform_name, int value) {
+Shader::~Shader() {
+  glDeleteProgram(this->programID);
+}
+
+
+
+
+void Shader::setInt(const char* uniform_name, const int value) {
+  glUseProgram(this->programID);
   int location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
-    std::cerr << "Warning: uniform '" << uniform_name << "' not found!\n";
+    std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
   }
+  // OpenGL ignores this if location == -1
   glUniform1i(location, value);
 }
 
 
 
 
-void Shader::setFloat(const char* uniform_name, float value) {
+void Shader::setFloat(const char* uniform_name, const float value) {
+  glUseProgram(this->programID);
   int location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
-    std::cerr << "Warning: uniform '" << uniform_name << "' not found!\n";
+    std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
   }
+  // OpenGL ignores this if location == -1
   glUniform1f(location, value);
+}
+
+
+
+
+void Shader::setMat4(const char* uniform_name, const glm::mat4& matrix) {
+  glUseProgram(this->programID);
+  GLuint location = glGetUniformLocation(this->programID, uniform_name);
+  if(location == -1) {
+    std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
+  }
+  // OpenGL ignores this if location == -1
+  glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix)); 
 }

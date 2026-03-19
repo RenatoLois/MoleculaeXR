@@ -1,5 +1,4 @@
 #include "renderer/Mesh.hpp"
-
 #include <glad/glad.h>
 
 
@@ -14,6 +13,27 @@ Mesh::Mesh(std::vector<Vertex> vertices,
   this->textures = textures;
 
   this->setupMesh();
+}
+
+
+
+
+Mesh::Mesh(std::vector<Vertex> vertices,
+           std::vector<unsigned int> indices)
+: Mesh::Mesh(vertices, indices, {}) { // chamando construtor com array de shaders vazio
+
+}
+
+
+
+
+// nao precisa verificar se existe,
+// caso nao existir o opengl nao faz
+// nada, entao basta tentar excluir
+Mesh::~Mesh() {
+  glDeleteVertexArrays(1, &VAO);
+  glDeleteBuffers(1, &VBO);
+  glDeleteBuffers(1, &EBO);
 }
 
 
@@ -51,7 +71,7 @@ void Mesh::setupMesh() {
 /*
  *  Inspired by https://learnopengl.com/Model-Loading/Mesh
  */
-void Mesh::draw(Shader& shader) {
+void Mesh::draw(Shader& shader, glm::mat4 model) {
   if(indices.empty()) {
     glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     return;
@@ -75,6 +95,9 @@ void Mesh::draw(Shader& shader) {
   glActiveTexture(GL_TEXTURE0);
 
   glBindVertexArray(this->VAO);
+
+  shader.setMat4("model_matrix", model);
+
   glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }

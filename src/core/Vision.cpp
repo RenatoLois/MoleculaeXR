@@ -7,14 +7,11 @@
 #include <stdexcept>
 #include <string>
 
-Vision::Vision(int cameraID) {
+Vision::Vision(int cameraID, cv::aruco::PredefinedDictionaryType marker_type) {
   this->cameraID = cameraID;
-  this->aruco_dict   = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_APRILTAG_36h11);
+  this->aruco_dict   = cv::aruco::getPredefinedDictionary(marker_type);
   this->aruco_params = cv::aruco::DetectorParameters();
   aruco_params.markerBorderBits = 1;
-
-  this->aruco_dict_ptr = cv::makePtr<cv::aruco::Dictionary>(aruco_dict);
-  this->aruco_params_ptr = cv::makePtr<cv::aruco::DetectorParameters>(this->aruco_params);
 }
 
 
@@ -69,7 +66,7 @@ cv::Mat Vision::getFramebuffer() {
 
 // detect april tags in framebuffer image
 // // returns false if no tag is found, otherwise returns true
-bool Vision::detectAprilTags() {
-  cv::aruco::detectMarkers(this->framebuffer, this->aruco_dict_ptr, this->tags_corners, this->tag_IDs, this->aruco_params_ptr);
+bool Vision::detectMarkers() {
+  cv::aruco::detectMarkers(this->framebuffer,  cv::makePtr<cv::aruco::Dictionary>(aruco_dict), this->tags_corners, this->tag_IDs, cv::makePtr<cv::aruco::DetectorParameters>(aruco_params));
   return !tag_IDs.empty();
 }

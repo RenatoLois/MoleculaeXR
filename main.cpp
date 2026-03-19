@@ -14,11 +14,11 @@
 //              |       |
 //              |       |
 //              /       \
-//             /         \
-//            /           \         Author: Renato Lóis Marcondes da Silva
-//           /             \        Github: https://github.com/renatolois
-//          /   .-'-.     .-\       License: all project's source code is licensed under GPL v3.0 
-//         /-.-´     `-.-´   \
+//             /         \          Authors:
+//            /           \          * Renato Lóis Marcondes da Silva
+//           /             \
+//          /   .-'-.     .-\       Github: https://github.com/renatolois
+//         /-.-´     `-.-´   \      License: all project's source code is licensed under GPL v3.0
 //        /                   \
 //       /                     \
 //      /                       \
@@ -28,12 +28,6 @@
 //
 //                    GNU GENERAL PUBLIC LICENSE
 //                       Version 3, 29 June 2007
-// Contributors: 
-//  <placeholder>
-//  <placeholder>
-//  <placeholder>
-//  <placeholder>
-//  <placeholder>
 //
 // !!! Attention, do not add your name next to another contributor's
 // name on the same line; create a new line.
@@ -47,7 +41,9 @@
 
 #include <cstddef>
 #include <cstdlib>
+#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <vector>
 #include <glad/glad.h>
@@ -59,12 +55,22 @@
 #include "renderer/Vertex.hpp"
 #include "renderer/Shader.hpp"
 
+
+// functions declaration
+
+
+
+
+
+
+
+
 int main(int argc, char**argv) {
   Window window(600, 600, "MoleculaeXR");
   window.initBackend();
   window.init();
 
-  Vision vision(0);
+  Vision vision(0, cv::aruco::DICT_APRILTAG_36h11);
 
   // x and y axis is fliped
   std::vector<Vertex> corner_vertices = {
@@ -87,23 +93,24 @@ int main(int argc, char**argv) {
   Mesh mesh_bg(corner_vertices, corner_indices, { texture_bg });
   Shader shader_bg("res/shaders/vertex_shader_bg.glsl", "res/shaders/fragment_shader_bg.glsl");
   
+// testing cube
   std::vector<Vertex> cube_vertices = {
     // up front left
-    Vertex( glm::vec3(-0.2f,  1.0f, -1.0f), glm::vec3( 0.0f,   0.0f, 0.0f), glm::vec2(0.0f, 0.0f) ),
+    Vertex( glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,   0.0f, 0.0f), glm::vec2(0.0f, 0.0f) ),
     // up front right
-    Vertex( glm::vec3( 1.0f,  1.0f, -1.0f), glm::vec3( 0.0f,   0.0f, 0.0f), glm::vec2(1.0f, 0.0f) ),
+    Vertex( glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,   0.0f, 0.0f), glm::vec2(1.0f, 0.0f) ),
     // bottom front left
-    Vertex( glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3( 0.0f,   0.0f, 0.0f), glm::vec2(0.0f, 1.0f) ),
+    Vertex( glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0.0f,   0.0f, 0.0f), glm::vec2(0.0f, 1.0f) ),
     // bottom front right
-    Vertex( glm::vec3( 1.0f, -1.0f, -1.0f), glm::vec3( 0.0f,   0.0f, 0.0f), glm::vec2(1.0f, 1.0f) ),
+    Vertex( glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 0.0f,   0.0f, 0.0f), glm::vec2(1.0f, 1.0f) ),
     // up back left
-    Vertex( glm::vec3(-0.4f,  1.0f,  0.0f), glm::vec3( 0.0f,  0.0f,  0.0f), glm::vec2(0.0f, 0.0f) ),
+    Vertex( glm::vec3(-0.4f,  0.5f,  0.0f), glm::vec3( 0.0f,  0.0f,  0.0f), glm::vec2(0.0f, 0.0f) ),
     // up back right
-    Vertex( glm::vec3( 1.0f,  1.0f,  0.0f), glm::vec3( 0.0f,  0.0f,  0.0f), glm::vec2(1.0f, 0.0f) ),
+    Vertex( glm::vec3( 0.5f,  0.5f,  0.0f), glm::vec3( 0.0f,  0.0f,  0.0f), glm::vec2(0.5f, 0.0f) ),
     // bottom back left
-    Vertex( glm::vec3(-1.0f, -1.0f,  0.0f), glm::vec3( 0.0f,  0.0f,  0.0f), glm::vec2(0.0f, 1.0f) ),
+    Vertex( glm::vec3(-0.5f, -0.5f,  0.0f), glm::vec3( 0.0f,  0.0f,  0.0f), glm::vec2(0.0f, 0.5f) ),
     // bottom back right
-    Vertex( glm::vec3( 1.0f, -1.0f,  0.0f), glm::vec3( 0.0f,  0.0f,  0.0f), glm::vec2(1.0f, 1.0f) ),
+    Vertex( glm::vec3( 0.5f, -0.5f,  0.0f), glm::vec3( 0.0f,  0.0f,  0.0f), glm::vec2(0.5f, 1.0f) ),
   };
 
   std::vector<unsigned int> cube_indices = {
@@ -127,8 +134,19 @@ int main(int argc, char**argv) {
     3, 5, 7
   };
 
-  Mesh mesh_cube(cube_vertices, cube_indices, {});
+  Mesh mesh_cube(cube_vertices, cube_indices);
   Shader shader_cube("res/shaders/vertex_shader.glsl", "res/shaders/fragment_shader.glsl");
+
+  glm::mat4 model, view, projection;
+  model = view = projection = glm::mat4(1.0f);
+  model = glm::scale(model, glm::vec3(0.5f));
+
+  shader_cube.setMat4("view_matrix", view);
+  shader_cube.setMat4("projection_matrix", projection);
+
+  shader_bg.setMat4("view_matrix", glm::mat4(1.0f));
+  shader_bg.setMat4("projection_matrix", glm::mat4(1.0f));
+// ! testing
 
   glClearColor(0.04f, 0.04f, 0.08f, 1.0f);
 
@@ -154,7 +172,7 @@ int main(int argc, char**argv) {
     vision.read();
     texture_bg.update(vision.getFramebuffer(), true);
 
-    if( vision.detectAprilTags() ) {
+    if( vision.detectMarkers() ) {
       total_tags_detected = vision.tag_IDs.size();
       for(size_t i = 0; i < total_tags_detected; i++) {
         std::cout << vision.tags_corners[i];
@@ -164,11 +182,12 @@ int main(int argc, char**argv) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_bg.id);
 
-    mesh_bg.draw(shader_bg);
+    mesh_bg.draw(shader_bg, glm::mat4(1.0f));
 
+// testing
     glUseProgram(shader_cube.programID);
-    mesh_cube.draw(shader_cube);
-    
+    mesh_cube.draw(shader_cube, model);
+// !testing
 
     glUseProgram(0);
 
