@@ -31,7 +31,7 @@
 
 Este é um projeto open-source voltado para trabalhar com a visualização de moleculas utilizando tecnologia de realidade aumentada.
 
-## estrutura do projeto
+## Estrutura do Projeto
 	- include/ -> arquivos de cabeçalho
 	- include/core -> arquivos de cabeçalho dependente de plataforma
 	- include/render -> arquivos de cabeçalho de código OpenGL
@@ -41,3 +41,14 @@ Este é um projeto open-source voltado para trabalhar com a visualização de mo
 	- res/ -> recursos
 	- res/assets/ -> recursos estáticos
 	- res/shaders/ -> códigos shader (GLSL)
+
+## Rodar o Projeto
+```bash
+	git clone https://github.com/RenatoLois/MoleculaeXR
+	cd MoleculaeXR/
+	mkdir build/
+	cd build/
+	cmake ..
+	make
+	./MoleculaeXR
+```
