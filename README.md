@@ -11,7 +11,7 @@
 						
              (¨¨¨¨¨¨¨¨¨)                                              
               |¨¨¨¨¨¨¨|                                               
-              |       |        Authors:
+              |       |        Autores:
               |       |         * Renato Lóis Marcondes da Silva        
               |       |          Github: https://github.com/renatolois  
               |       |                                               
