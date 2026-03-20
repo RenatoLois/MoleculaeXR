@@ -1,5 +1,5 @@
-<pre style>
-<div style="text-align:center">
+<pre>
+<center>
   ┌──────────────────────────────────────────────────────┐              
   │                                                      │              
   │    .   ,     .             .           .   , ,-.     │              
@@ -9,7 +9,7 @@
   │    '   ' `-' ' `-' `-' `-` ' `-` `-'   '   ` '  '    │              
   │                                                      │              
   └──────────────────────────────────────────────────────┘              
-</div>
+</center>
 						
              (¨¨¨¨¨¨¨¨¨)                                              
               |¨¨¨¨¨¨¨|                                               
@@ -17,10 +17,10 @@
               |       |                                               
               |       |                                               
               /       \                                               
-             /         \          Authors:                            
-            /           \          * Renato Lóis Marcondes da Silva   
-           /             \                                            
-          /   .-'-.     .-\       Github: https://github.com/renatoloi
+             /         \       Authors:                            
+            /           \       * Renato Lóis Marcondes da Silva   
+           /             \        Github: https://github.com/renatolois
+          /   .-'-.     .-\
          /-.-´     `-.-´   \     
         /                   \    
        /                     \   
