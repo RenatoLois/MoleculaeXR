@@ -50,6 +50,7 @@
 
 #include "core/Window.hpp"
 #include "core/Vision.hpp"
+#include "core/CallbackManager.hpp"
 #include "renderer/Mesh.hpp"
 #include "renderer/Textures.hpp"
 #include "renderer/Vertex.hpp"
