@@ -21,6 +21,7 @@ class Window{
 protected:
   int width;
   int height;
+  double last_time, current_time;
   std::string title;
 
 // window attribute
@@ -68,6 +69,8 @@ public:
 
   // funcao que retorna o tempo (para usar em delta-time e outros afins)
   double getCurrentTime();
+  void initDeltaTime();
+  double getDeltaTime();
 
   // verifica se a janela foi pedida para ser fechada
   bool shouldClose();

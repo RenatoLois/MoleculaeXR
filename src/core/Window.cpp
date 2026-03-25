@@ -187,10 +187,24 @@ GLFWwindow* Window::getWindow() const {
 
 
 
-double Window::getCurrentTime() {
+double Window::initCurrentTime() {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
-  return glfwGetTime();
+  this->last_time = this.getCurrentTime();
+  this->current_time = this->last_time;
+#endif
+}
+
+
+
+
+double Window::getDeltaTime() {
+#if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
+#elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
+  this->current_time = this->getCurrentTime();
+  double delta_time = this->current_time - this->last_time;
+  this->last_time = this->current_time;
+  return delta_time;
 #endif
 }
 
