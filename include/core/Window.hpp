@@ -41,13 +41,13 @@ public:
 
   // retorna a instancia da janela
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
-  SDL_window* getWindow() const;
+  SDL_window* get_window() const;
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
-  GLFWwindow* getWindow() const;
+  GLFWwindow* get_window() const;
 #endif
 
   // prepara a janela internamente para uso
-  int initBackend();
+  int init_backend();
 
   // inicializa a instancia da janela
   int init();
@@ -56,22 +56,22 @@ public:
   int destroy();
 
   // retorna "true" se a janela esta visive, "false" caso contrario
-  bool isVisible() const;
+  bool is_visible() const;
 
   // define se a janela deve ser visivel ou nao
-  void setVisible(bool visbible);
+  void set_visible(bool visbible);
 
   // verifica se houve algum evento na janela (clique, digitacao, mouse, fechar, etc)
-  void pollEvents();  
+  void poll_events();  
 
   // atualiza o buffer de video
-  void swapBuffers();
+  void swap_buffers();
 
   // funcao que retorna o tempo (para usar em delta-time e outros afins)
-  double getCurrentTime();
-  void initDeltaTime();
-  double getDeltaTime();
+  double get_current_time();
+  void init_delta_time();
+  double get_delta_time();
 
   // verifica se a janela foi pedida para ser fechada
-  bool shouldClose();
+  bool should_close();
 };

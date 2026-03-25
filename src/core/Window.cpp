@@ -54,7 +54,7 @@ Window::~Window() {
 
 
 // start gflw or sdl backend (depends on which one you use)
-int Window::initBackend() {
+int Window::init_backend() {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 
 
@@ -134,7 +134,7 @@ int Window::destroy() {
 
 // return if window is visible
 // assuming this->window != NULL
-bool Window::isVisible() const {
+bool Window::is_visible() const {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
   return glfwGetWindowAttrib(this->window, GLFW_VISIBLE);
@@ -145,7 +145,7 @@ bool Window::isVisible() const {
 
 
 // assuming this->window != NULL
-void Window::setVisible(bool visible) {
+void Window::set_visible(bool visible) {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
   visible ? glfwShowWindow(this->window) : glfwHideWindow(this->window);
@@ -155,7 +155,7 @@ void Window::setVisible(bool visible) {
 
 
 
-void Window::pollEvents() {
+void Window::poll_events() {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
   glfwPollEvents();
@@ -166,7 +166,7 @@ void Window::pollEvents() {
 
 
 // assuming this->window != NULL
-void Window::swapBuffers() {
+void Window::swap_buffers() {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
   glfwSwapBuffers(this->window);
@@ -177,9 +177,9 @@ void Window::swapBuffers() {
 
 
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
-SDL_window* Window::getWindow() const {
+SDL_window* Window::get_window() const {
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
-GLFWwindow* Window::getWindow() const {
+GLFWwindow* Window::get_window() const {
 #endif
   return this->window;
 }
@@ -187,10 +187,10 @@ GLFWwindow* Window::getWindow() const {
 
 
 
-void Window::initDeltaTime() {
+void Window::init_delta_time() {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
-  this->last_time = this->getCurrentTime();
+  this->last_time = this->get_current_time();
   this->current_time = this->last_time;
 #endif
 }
@@ -198,10 +198,10 @@ void Window::initDeltaTime() {
 
 
 
-double Window::getDeltaTime() {
+double Window::get_delta_time() {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
-  this->current_time = this->getCurrentTime();
+  this->current_time = this->get_current_time();
   double delta_time = this->current_time - this->last_time;
   this->last_time = this->current_time;
   return delta_time;
@@ -211,7 +211,7 @@ double Window::getDeltaTime() {
 
 
 
-bool Window::shouldClose() {
+bool Window::should_close() {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
   return glfwWindowShouldClose(this->window);
