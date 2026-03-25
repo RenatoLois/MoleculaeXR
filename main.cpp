@@ -37,6 +37,8 @@
 // Everyone is permitted to copy and distribute verbatim copies
 // of this license document, but changing it is not allowed.
 //
+//
+// TODO ver sobre lerp e slerp para suavizar o marker
 
 
 #include <cstddef>
@@ -45,30 +47,31 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include <memory>
+#include <unordered_map>
 #include <vector>
 #include <glad/glad.h>
 
 #include "core/Window.hpp"
 #include "core/Vision.hpp"
-#include "core/CallbackManager.hpp"
 #include "renderer/Mesh.hpp"
 #include "renderer/Textures.hpp"
 #include "renderer/Vertex.hpp"
 #include "renderer/Shader.hpp"
 
 
+
+
 // functions declaration
 
-
-
-
+void draw_object(unsigned int id, Mesh& mesh, Shader& shader, std::vector<cv::Point2f>& corners, glm::mat4& model);
 
 
 
 
 int main(int argc, char**argv) {
   Window window(600, 600, "MoleculaeXR");
-  window.initBackend();
+  window.init_backend();
   window.init();
 
   Vision vision(0, cv::aruco::DICT_APRILTAG_36h11);
@@ -95,6 +98,9 @@ int main(int argc, char**argv) {
   Shader shader_bg("res/shaders/vertex_shader_bg.glsl", "res/shaders/fragment_shader_bg.glsl");
   
 // testing cube
+  // TODO replace this 
+  std::unordered_map<unsigned int, std::shared_ptr<Mesh>> meshs;
+
   std::vector<Vertex> cube_vertices = {
     // up front left
     Vertex( glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,   0.0f, 0.0f), glm::vec2(0.0f, 0.0f) ),
@@ -154,48 +160,60 @@ int main(int argc, char**argv) {
   double last_time, current_time, delta_time;
 
   vision.open();
-  window.setVisible(true);
+  window.set_visible(true);
 
   vision.read();
   texture_bg.load(vision.getFramebuffer(), true);
 
   // main loop
-  last_time = window.getCurrentTime();
+  last_time = window.get_current_time();
   size_t total_tags_detected;
 
-  while ( !window.shouldClose() ) {
-    current_time = window.getCurrentTime();
+  // testing
+  meshs[0] = std::make_shared<Mesh>(mesh_cube);
+  // !testing
+
+  while ( !window.should_close() ) {
+    current_time = window.get_current_time();
     delta_time = current_time - last_time;
-    window.pollEvents();
+    window.poll_events();
 
     glUseProgram(shader_bg.programID);
     glClear(GL_COLOR_BUFFER_BIT);
     vision.read();
     texture_bg.update(vision.getFramebuffer(), true);
 
-    if( vision.detectMarkers() ) {
-      total_tags_detected = vision.tag_IDs.size();
-      for(size_t i = 0; i < total_tags_detected; i++) {
-        std::cout << vision.tags_corners[i];
-      }
-    }
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_bg.id);
 
     mesh_bg.draw(shader_bg, glm::mat4(1.0f));
 
-// testing
-    glUseProgram(shader_cube.programID);
-    mesh_cube.draw(shader_cube, model);
-// !testing
+
+    if( vision.detectMarkers() ) {
+      total_tags_detected = vision.tag_IDs.size();
+      for(size_t i = 0; i < total_tags_detected; i++) {
+        std::cout << vision.tags_corners[i] << '\n';
+        if(meshs.find( vision.tag_IDs[i] ) != meshs.end()) {
+          draw_object(i, *(meshs[ vision.tag_IDs[i] ]), shader_cube, vision.tags_corners[i], model);
+        }
+      }
+    }
 
     glUseProgram(0);
 
 
-    window.swapBuffers();
+    window.swap_buffers();
     last_time = current_time;
   }
 
   return EXIT_SUCCESS;
 }
+
+
+
+
+void draw_object(unsigned int id, Mesh& mesh, Shader& shader, std::vector<cv::Point2f>& corners, glm::mat4& model) {
+  glUseProgram(shader.programID);
+  mesh.draw(shader, model);
+}
+
