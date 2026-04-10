@@ -20,4 +20,8 @@ public:
   void setFloat(const char* uniform_name, const float value);
   // envia um "uniform" do tipo "mat4" para o shader
   void setMat4(const char* uniform_name, const glm::mat4& matrix);
+
+  inline void use() {
+    glUseProgram(this->programID);
+  }
 };

@@ -1,1 +1,4 @@
-implement Texture load(..., powerof2=true);
+implementar Texture load(..., powerof2=true);
+implementar classe Material
+implementar classe Object
+implementar classe Scene
