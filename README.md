@@ -34,10 +34,10 @@ Este é um projeto open-source voltado para trabalhar com a visualização de mo
 ## Estrutura do Projeto
 	- include/ -> arquivos de cabeçalho
 	- include/core -> arquivos de cabeçalho dependente de plataforma
-	- include/render -> arquivos de cabeçalho de código OpenGL
+	- include/engine -> arquivos de cabeçalho de código da engine baseada em OpenGL
 	- src/ -> implementação de código
 	- src/core/ -> implementação de código dependente de plataforma
-	- src/render/ -> implementação de código OpenGL
+	- src/engine/ -> implementação de código da engine baseada em OpenGL
 	- res/ -> recursos
 	- res/assets/ -> recursos estáticos
 	- res/shaders/ -> códigos shader (GLSL)
