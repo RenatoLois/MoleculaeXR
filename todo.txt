@@ -1,4 +1,3 @@
 implementar Texture load(..., powerof2=true);
-implementar classe Material
-implementar classe Object
+terminar de implementar classe Entity
 implementar classe Scene

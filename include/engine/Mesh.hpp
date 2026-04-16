@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "renderer/Vertex.hpp"
-#include "renderer/Textures.hpp"
-#include "renderer/Shader.hpp"
+#include "engine/Vertex.hpp"
+#include "engine/Textures.hpp"
+#include "engine/Shader.hpp"
 
 class Mesh {
 private:

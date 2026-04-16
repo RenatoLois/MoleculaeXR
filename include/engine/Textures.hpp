@@ -32,12 +32,12 @@ public:
   // carrega uma imagem da camera do OpenCV
   void load(const cv::Mat& frame, bool to_power_of_2);
 
+  // atualiza a imagem usada na textura
+  void update(const cv::Mat& frame, bool to_power_of_2);
+  
   // vincula a textura à unidade de textura do contexto
-  void bind();
+  void bind(int num);
 
   // desvincula a textura à unidade de textura do contexto
   void unbind();
-
-  // atualiza a imagem usada na textura
-  void update(const cv::Mat& frame, bool to_power_of_2);
 };

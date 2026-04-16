@@ -1,4 +1,4 @@
-#include "renderer/Mesh.hpp"
+#include "engine/Mesh.hpp"
 #include <glad/glad.h>
 
 
@@ -71,6 +71,8 @@ void Mesh::setupMesh() {
 /*
  *  Inspired by https://learnopengl.com/Model-Loading/Mesh
  */
+
+// refatorar isso para usar apenas 1 textura de cada
 void Mesh::draw(Shader& shader, glm::mat4 model) {
   if(indices.empty()) {
     glDrawArrays(GL_TRIANGLES, 0, vertices.size());
@@ -89,14 +91,14 @@ void Mesh::draw(Shader& shader, glm::mat4 model) {
     else if(name == "texture_specular")
       number = std::to_string(specularNr++);
 
-    shader.setInt(( std::string("material_" + name + number) ).c_str(), i);
+    shader.set_int(( std::string("material_" + name + number) ).c_str(), i);
     glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
   }
   glActiveTexture(GL_TEXTURE0);
 
   glBindVertexArray(this->VAO);
 
-  shader.setMat4("model_matrix", model);
+  shader.set_mat4("model_matrix", model);
 
   glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);

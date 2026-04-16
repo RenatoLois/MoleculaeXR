@@ -62,19 +62,17 @@
 
 // functions declaration
 
+void draw_object(unsigned int id, Mesh& mesh, Shader& shader, std::vector<cv::Point2f> corners);
 
-void init(Window& main_window, Vision& vision);
-void draw_object(unsigned int id, Mesh& mesh, Shader& shader, std::vector<cv::Point2f> corners, glm::mat4& model);
-void update();
-void render();
 
 
 
 int main(int argc, char**argv) {
   Window window(600, 600, "MoleculaeXR");
-  Vision vision(0, cv::aruco::DICT_APRILTAG_36h11);
+  window.init_backend();
+  window.init();
 
-  init(window, vision);
+  Vision vision(0, cv::aruco::DICT_APRILTAG_36h11);
 
   // x and y axis is fliped
   std::vector<Vertex> corner_vertices = {
@@ -155,15 +153,23 @@ int main(int argc, char**argv) {
   shader_bg.setMat4("projection_matrix", glm::mat4(1.0f));
 // ! testing
 
+  glClearColor(0.04f, 0.04f, 0.08f, 1.0f);
+
+  double last_time, current_time, delta_time;
+
+  vision.open();
+  window.set_visible(true);
+
+  vision.read();
   texture_bg.load(vision.getFramebuffer(), true);
 
   // main loop
+  last_time = window.get_current_time();
   size_t total_tags_detected;
 
-  window.init_delta_time();
-
   while ( !window.should_close() ) {
-    double delta_time = window.get_delta_time();
+    current_time = window.get_current_time();
+    delta_time = current_time - last_time;
     window.poll_events();
 
     glUseProgram(shader_bg.programID);
@@ -175,7 +181,7 @@ int main(int argc, char**argv) {
       total_tags_detected = vision.tag_IDs.size();
       for(size_t i = 0; i < total_tags_detected; i++) {
         std::cout << vision.tags_corners[i];
-        draw_object(i, *(meshs[i]), shader_cube, vision.tags_corners[i], model);
+        draw_object(i, *(meshs[i]), shader_cube, vision.tags_corners[i]);
       }
     }
 
@@ -188,6 +194,7 @@ int main(int argc, char**argv) {
 
 
     window.swap_buffers();
+    last_time = current_time;
   }
 
   return EXIT_SUCCESS;
@@ -196,17 +203,8 @@ int main(int argc, char**argv) {
 
 
 
-void draw_object(unsigned int id, Mesh& mesh, Shader& shader, std::vector<cv::Point2f> corners, glm::mat4& model) {
+void draw_object(unsigned int id, Mesh& mesh, Shader& shader, std::vector<cv::Point2f> corners, ) {
   glUseProgram(shader.programID);
   mesh.draw(shader, model);
 }
 
-
-void init(Window& window, Vision& vision) {
-  window.init_backend();
-  window.init();
-  vision.open();
-  vision.read();
-  window.set_visible(true);
-  glClearColor(0.04f, 0.04f, 0.08f, 1.0f);
-}

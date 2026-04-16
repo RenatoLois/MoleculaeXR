@@ -1,4 +1,4 @@
-#include "renderer/Shader.hpp"
+#include "engine/Shader.hpp"
 #include <iostream>
 #include <stdexcept>
 #include <stdio.h>
@@ -130,11 +130,12 @@ Shader::~Shader() {
 
 
 
-void Shader::setInt(const char* uniform_name, const int value) {
+void Shader::set_int(const char* uniform_name, const int value) {
   glUseProgram(this->programID);
   int location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
     std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
+    return;
   }
   // OpenGL ignores this if location == -1
   glUniform1i(location, value);
@@ -143,11 +144,12 @@ void Shader::setInt(const char* uniform_name, const int value) {
 
 
 
-void Shader::setFloat(const char* uniform_name, const float value) {
+void Shader::set_float(const char* uniform_name, const float value) {
   glUseProgram(this->programID);
   int location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
     std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
+    return;
   }
   // OpenGL ignores this if location == -1
   glUniform1f(location, value);
@@ -156,12 +158,41 @@ void Shader::setFloat(const char* uniform_name, const float value) {
 
 
 
-void Shader::setMat4(const char* uniform_name, const glm::mat4& matrix) {
+void Shader::set_mat4(const char* uniform_name, const glm::mat4& matrix) {
   glUseProgram(this->programID);
   GLuint location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
     std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
+    return;
   }
   // OpenGL ignores this if location == -1
   glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix)); 
+}
+
+
+
+
+void Shader::set_vec3(const char* uniform_name, const glm::vec3& vector) {
+  glUseProgram(this->programID);
+  GLuint location = glGetUniformLocation(this->programID, uniform_name);
+  if(location == -1) {
+    std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
+    return;
+  }
+  // OpenGL ignores this if location == -1
+  glUniform3fv(location, 1, glm::value_ptr(vector)); 
+}
+
+
+
+
+void Shader::set_vec4(const char* uniform_name, const glm::vec4& vector) {
+  glUseProgram(this->programID);
+  GLuint location = glGetUniformLocation(this->programID, uniform_name);
+  if(location == -1) {
+    std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
+    return;
+  }
+  // OpenGL ignores this if location == -1
+  glUniform4fv(location, 1, glm::value_ptr(vector)); 
 }
