@@ -1,22 +1,21 @@
 #pragma once
 
-#include <memory.h>
 #include <memory>
-#include <glm/glm.hpp>
-#include "engine/Mesh.hpp"
-#include "engine/Material.hpp"
+#include "engine/Model.hpp"
 
 
 class Entity {
 private:
-  std::shared_ptr<Mesh> mesh;
-  std::shared_ptr<Material> material;
-  glm::vec3 translation;
-  glm::mat4 rotation;
-  glm::mat4 scale;
+  std::shared_ptr<Model> model;
+  Transform transform;
 
 public:
-  Entity(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material) {
+  Entity() = default;
 
-  }
+  void set_translation(glm::vec3 pos);
+  void set_rotation(glm::quat rotation);
+  void set_scale(glm::vec3 scale);
+
+  std::shared_ptr<Model> get_model() const;
+  glm::mat4 get_model_matrix() const;
 };

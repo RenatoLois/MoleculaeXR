@@ -21,7 +21,7 @@ class Window{
 protected:
   int width;
   int height;
-  double last_time, current_time;
+  double last_time = 0, current_time;
   std::string title;
 
 // window attribute
@@ -68,10 +68,10 @@ public:
   void swap_buffers();
 
   // funcao que retorna o tempo (para usar em delta-time e outros afins)
-  double get_current_time();
-  void init_delta_time();
+  double get_current_time() const;
+  // void init_delta_time();
   double get_delta_time();
 
   // verifica se a janela foi pedida para ser fechada
-  bool should_close();
+  bool should_close() const ;
 };

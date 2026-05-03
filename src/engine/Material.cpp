@@ -2,21 +2,27 @@
 #include <memory>
 
 
-Material::Material(std::shared_ptr<Shader> shader) {
+Material::Material(
+  std::shared_ptr<Shader> shader,
+  std::shared_ptr<Texture> texture_diffuse,
+  std::shared_ptr<Texture> texture_specular,
+  // std::shared_ptr<Texture> texture_ambient,
+  glm::vec4& color,
+  float shininess
+) {
   this->shader = shader;
-  this->color = glm::vec4(1.0f);
-  this->texture_diffuse = nullptr;
-  this->texture_specular = nullptr;
-  // this->texture_ambient = nullptr;
+  this->texture_diffuse = texture_diffuse;
+  this->texture_specular = texture_specular;
+  // this->texture_ambient = texture_ambient;
+  this->color = color;
+  this->shininess = shininess;
 }
 
 
 
 
-void Material::bind() {
+void Material::apply() const {
   this->shader->use();
-  
-  this->shader->set_vec4("u_color", this->color);
 
   if(this->texture_diffuse != nullptr) {
     this->texture_diffuse->bind(0);
@@ -26,7 +32,17 @@ void Material::bind() {
     this->texture_specular->bind(1);
   }
 
-  this->shader->set_float("u_shininess", this->shininess);
+  /*
+  if(this->texture_ambient != nullptr) {
+    this->texture_ambient->bind(2);
+  }
+  */
+
+  this->shader->set_int("material_diffuse", 0);
+  this->shader->set_int("material_specular", 1);
+  // this->shader->set_int("material_ambient", 2);
+
+  this->shader->set_float("material_shininess", this->shininess);
 }
 
 

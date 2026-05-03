@@ -29,8 +29,8 @@ public:
   bool read();
 
   // retornar o framebuffer
-  cv::Mat getFramebuffer();
+  cv::Mat get_framebuffer();
 
   // escreve os dados dos marcadores nos seguintes atributos: this.tags_corners, this.tag_IDs
-  bool detectMarkers();
+  bool detect_markers();
 };

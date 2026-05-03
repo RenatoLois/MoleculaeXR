@@ -1,3 +1,7 @@
 implementar Texture load(..., powerof2=true);
 terminar de implementar classe Entity
 implementar classe Scene
+
+implementar Renderer
+Implementar Camera
+Implementar Entity

@@ -131,7 +131,7 @@ Shader::~Shader() {
 
 
 void Shader::set_int(const char* uniform_name, const int value) {
-  glUseProgram(this->programID);
+  // glUseProgram(this->programID);
   int location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
     std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
@@ -145,7 +145,7 @@ void Shader::set_int(const char* uniform_name, const int value) {
 
 
 void Shader::set_float(const char* uniform_name, const float value) {
-  glUseProgram(this->programID);
+  // glUseProgram(this->programID);
   int location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
     std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
@@ -159,7 +159,7 @@ void Shader::set_float(const char* uniform_name, const float value) {
 
 
 void Shader::set_mat4(const char* uniform_name, const glm::mat4& matrix) {
-  glUseProgram(this->programID);
+  // glUseProgram(this->programID);
   GLuint location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
     std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
@@ -173,7 +173,7 @@ void Shader::set_mat4(const char* uniform_name, const glm::mat4& matrix) {
 
 
 void Shader::set_vec3(const char* uniform_name, const glm::vec3& vector) {
-  glUseProgram(this->programID);
+  // glUseProgram(this->programID);
   GLuint location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
     std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";
@@ -187,7 +187,7 @@ void Shader::set_vec3(const char* uniform_name, const glm::vec3& vector) {
 
 
 void Shader::set_vec4(const char* uniform_name, const glm::vec4& vector) {
-  glUseProgram(this->programID);
+  // glUseProgram(this->programID);
   GLuint location = glGetUniformLocation(this->programID, uniform_name);
   if(location == -1) {
     std::cerr << "Warning: uniform '" << uniform_name << "' not found in program with id = " << this->programID << "\n";

@@ -57,7 +57,7 @@ bool Vision::read() {
 
 
 // get this->framebuffer
-cv::Mat Vision::getFramebuffer() {
+cv::Mat Vision::get_framebuffer() {
   return this->framebuffer;
 }
 
@@ -66,7 +66,7 @@ cv::Mat Vision::getFramebuffer() {
 
 // detect april tags in framebuffer image
 // // returns false if no tag is found, otherwise returns true
-bool Vision::detectMarkers() {
+bool Vision::detect_markers() {
   cv::aruco::detectMarkers(this->framebuffer,  cv::makePtr<cv::aruco::Dictionary>(aruco_dict), this->tags_corners, this->tag_IDs, cv::makePtr<cv::aruco::DetectorParameters>(aruco_params));
   return !tag_IDs.empty();
 }

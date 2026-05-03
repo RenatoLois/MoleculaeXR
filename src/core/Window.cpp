@@ -187,6 +187,17 @@ GLFWwindow* Window::get_window() const {
 
 
 
+double Window::get_current_time() const {
+#if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
+#elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
+  return glfwGetTime();
+#endif
+}
+
+
+
+
+/*
 void Window::init_delta_time() {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
@@ -194,6 +205,7 @@ void Window::init_delta_time() {
   this->current_time = this->last_time;
 #endif
 }
+*/
 
 
 
@@ -211,7 +223,7 @@ double Window::get_delta_time() {
 
 
 
-bool Window::should_close() {
+bool Window::should_close() const {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
   return glfwWindowShouldClose(this->window);

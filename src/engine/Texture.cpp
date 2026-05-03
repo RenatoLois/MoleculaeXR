@@ -1,4 +1,4 @@
-#include "engine/Textures.hpp"
+#include "engine/Texture.hpp"
 #include <glad/glad.h>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/opencv.hpp>
@@ -57,17 +57,11 @@ int nearest_power_of_2(int n) {
     power : last_power;
 }
 
-Texture::Texture(std::string type) {
+
+
+
+Texture::Texture(std::string& texture_filepath, bool to_power_of_2) {
   glGenTextures(1, & this->id);
-  this->type = type;
-}
-
-
-
-
-Texture::Texture(std::string type, std::string texture_filepath, bool to_power_of_2) {
-  glGenTextures(1, & this->id);
-  this->type = type;
   this->load(texture_filepath, to_power_of_2);
 }
 
@@ -126,7 +120,7 @@ void Texture::load(const cv::Mat& frame, bool to_power_of_2) {
 
 
 
-void Texture::load(std::string texture_filepath, bool to_power_of_2) {
+void Texture::load(std::string& texture_filepath, bool to_power_of_2) {
   // deletando textura caso ja exista
   glDeleteTextures(1, &(this->id));
 

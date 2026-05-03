@@ -14,20 +14,20 @@
 class Texture {
 public:
   unsigned int id;
-  std::string type;
 
   // construtor sem definir ainda a imagem ( usar this.load() posteriormente )
   // obs: nao usar update antes de load no caso de nao ter uma imagem ainda
-  Texture(std::string type);
+
+  Texture() = default;
 
   // construtor definindo a imagem
-  Texture(std::string type, std:: string texture_filepath, bool to_power_of_2);
+  Texture(std:: string& texture_filepath, bool to_power_of_2);
 
   // destrutor (libera a memoria da textura)
   ~Texture();
 
   // carrega uma imagem para a textura pelo nome do local do arquivo
-  void load(std::string texture_filepath, bool to_power_of_2);
+  void load(std::string& texture_filepath, bool to_power_of_2);
 
   // carrega uma imagem da camera do OpenCV
   void load(const cv::Mat& frame, bool to_power_of_2);
