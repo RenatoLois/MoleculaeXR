@@ -1,5 +1,6 @@
 #include "engine/Material.hpp"
 #include <memory>
+#include <utility>
 
 
 Material::Material(
@@ -10,7 +11,7 @@ Material::Material(
   glm::vec4& color,
   float shininess
 ) {
-  this->shader = shader;
+  this->shader = std::move(shader);
   this->texture_diffuse = texture_diffuse;
   this->texture_specular = texture_specular;
   // this->texture_ambient = texture_ambient;
@@ -38,11 +39,19 @@ void Material::apply() const {
   }
   */
 
-  this->shader->set_int("material_diffuse", 0);
-  this->shader->set_int("material_specular", 1);
-  // this->shader->set_int("material_ambient", 2);
+  this->shader->set_uniform("material.diffuse", 0);
+  this->shader->set_uniform("material.specular", 1);
+  // this->shader->set_uniform("material.ambient", 2);
 
-  this->shader->set_float("material_shininess", this->shininess);
+  this->shader->set_uniform("material.shininess", this->shininess);
+}
+
+
+
+
+template<typename ...Args>
+void Material::set_uniform(Args... args) {
+  this->shader->set_uniform(std::forward<Args>(args)...);
 }
 
 

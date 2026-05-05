@@ -3,13 +3,20 @@
 #include <glad/glad.h>
 
 
-Mesh::Mesh(std::vector<Vertex>& vertices,
-           std::vector<unsigned int>& indices)
+Mesh::Mesh(const std::vector<Vertex>& vertices) {
+  this->vertices = vertices;
+  this->indices = {};
+
+  this->setup_mesh();
+}
+
+Mesh::Mesh(const std::vector<Vertex>& vertices,
+           const std::vector<unsigned int>& indices)
 {
   this->vertices = vertices;
   this->indices = indices;
-  
-  this->setupMesh();
+
+  this->setup_mesh();
 }
 
 
@@ -27,29 +34,39 @@ Mesh::~Mesh() {
 
 
 
-void Mesh::setupMesh() {
+size_t Mesh::get_indices_size() const {
+  return this->indices.size();
+}
+
+
+
+
+void Mesh::setup_mesh() {
   glGenVertexArrays(1, & this->VAO);
   glGenBuffers(1, & this->VBO);
-  glGenBuffers(1, & this->EBO);
     
   glBindVertexArray(this->VAO);
   glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+  glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(Vertex), this->vertices.data(), GL_STATIC_DRAW);  
 
-  glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(Vertex), & this->vertices[0], GL_STATIC_DRAW);  
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               this->indices.size() * sizeof(unsigned int), 
-               & this->indices[0], GL_STATIC_DRAW);
+  if(indices.size() != 0) {
+    glGenBuffers(1, &this->EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 this->indices.size() * sizeof(unsigned int), 
+                 this->indices.data(), GL_STATIC_DRAW);
+  } else {
+    this->EBO = 0;
+  }
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
   glEnableVertexAttribArray(0);	
 
-  glEnableVertexAttribArray(1);	
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+  glEnableVertexAttribArray(1);	
 
-  glEnableVertexAttribArray(2);	
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
+  glEnableVertexAttribArray(2);	
 
   glBindVertexArray(0);
 }
@@ -60,4 +77,3 @@ void Mesh::setupMesh() {
 void Mesh::bind() const {
   glBindVertexArray(this->VAO);
 }
-

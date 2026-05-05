@@ -9,6 +9,9 @@ private:
 	glm::vec3 position = glm::vec3(1.0f);
 	glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	glm::vec3 scale = glm::vec3(1.0f);
+
+  mutable glm::mat4 cached_model_matrix;
+  mutable bool dirty;
 	
 public:
 	Transform() = default;

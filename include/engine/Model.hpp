@@ -15,7 +15,10 @@ public:
 
   Model(const std::vector<ModelPiece>& model_pieces);
 
+  // assumindo que o tamanho dos vectors sao iguais
   Model(const std::vector<std::shared_ptr<Mesh>>& meshs,
         const std::vector<std::shared_ptr<Material>>& materials,
         const std::vector<Transform>& transforms);
+
+  const std::vector<ModelPiece>& get_model_pieces() const;
 };
