@@ -1,5 +1,7 @@
 #pragma once
 
+
+namespace arche::core {}
 #define USE_WINDOW_BACKEND_LIBRARY_GLFW
 //#define USE_WINDOW_BACKEND_LIBRARY_SDL
 
