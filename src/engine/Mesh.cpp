@@ -3,13 +3,6 @@
 #include <glad/glad.h>
 
 
-Mesh::Mesh(const std::vector<Vertex>& vertices) {
-  this->vertices = vertices;
-  this->indices = {};
-
-  this->setup_mesh();
-}
-
 Mesh::Mesh(const std::vector<Vertex>& vertices,
            const std::vector<unsigned int>& indices)
 {

@@ -12,12 +12,8 @@ public:
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
 
-  // construtor sem indices
-  Mesh(const std::vector<Vertex>& vertices);
-
-  // construtor com indices
   Mesh(const std::vector<Vertex>& vertices,
-       const std::vector<unsigned int>& indices);
+       const std::vector<unsigned int>& indices = {});
 
   // destrutor
   ~Mesh();

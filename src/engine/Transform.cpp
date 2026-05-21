@@ -4,8 +4,6 @@ Transform::Transform(glm::vec3& position, glm::quat& rotation, glm::vec3& scale)
 	this->position = position;
 	this->rotation = rotation;
 	this->scale = scale;
-
-  this->dirty = true;
 }
 
 
