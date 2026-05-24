@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <string>
 
 
 GLchar* read_shader(const char* filename) {
@@ -81,7 +82,8 @@ Shader::Shader(const char *vtxShaderFilepath, const char *frgShaderFilepath) {
     glDeleteShader(frgShaderId);
     free((void*) vtxShaderFileBuffer);
     free((void*) frgShaderFileBuffer);
-    throw std::runtime_error(logBuffer);
+    std::string error = std::string(vtxShaderFilepath) + ":\n" + std::string(logBuffer);
+    throw std::runtime_error(error);
   }
 
   glGetShaderiv(frgShaderId, GL_COMPILE_STATUS, &compileSuccess);
@@ -92,7 +94,8 @@ Shader::Shader(const char *vtxShaderFilepath, const char *frgShaderFilepath) {
     glDeleteShader(frgShaderId);
     free((void*) vtxShaderFileBuffer);
     free((void*) frgShaderFileBuffer);
-    throw std::runtime_error(logBuffer);
+    std::string error = std::string(frgShaderFilepath) + ":\n" + std::string(logBuffer);
+    throw std::runtime_error(error);
   }
 
   free((void*) vtxShaderFileBuffer);
@@ -112,8 +115,8 @@ Shader::Shader(const char *vtxShaderFilepath, const char *frgShaderFilepath) {
     glDeleteShader(vtxShaderId);
     glDeleteShader(frgShaderId);
     glDeleteProgram(this->programID);
-    fprintf(stderr, "error compiling fragment shader: %s", logBuffer);
-    throw std::runtime_error(logBuffer);
+    std::string error = std::string("Program Link Error: \n") + std::string(logBuffer);
+    throw std::runtime_error(error);
   }
 
   glDeleteShader(vtxShaderId);

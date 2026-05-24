@@ -4,19 +4,19 @@
 
 
 Material::Material(
-  std::shared_ptr<Shader> shader,
-  std::shared_ptr<Texture> texture_diffuse,
-  std::shared_ptr<Texture> texture_specular,
-  // std::shared_ptr<Texture> texture_ambient,
-  glm::vec4& color,
-  float shininess
+  std::shared_ptr<Shader> shader,  // = nullptr
+  glm::vec4 color,  // = {0.8f, 0.8f, 0.8f, 1.0f}
+  float shininess,  // = 32
+  // std::shared_ptr<Texture> texture_ambient,  // = nullptr
+  std::shared_ptr<Texture> texture_diffuse,  // = nullptr
+  std::shared_ptr<Texture> texture_specular  // = nullptr
 ) {
   this->shader = std::move(shader);
+  this->color = color;
+  this->shininess = shininess;
   this->texture_diffuse = texture_diffuse;
   this->texture_specular = texture_specular;
   // this->texture_ambient = texture_ambient;
-  this->color = color;
-  this->shininess = shininess;
 }
 
 
@@ -24,34 +24,27 @@ Material::Material(
 
 void Material::apply() const {
   this->shader->use();
+  if(this->use_texture) {
 
-  if(this->texture_diffuse != nullptr) {
-    this->texture_diffuse->bind(0);
+    if(this->texture_diffuse != nullptr) {
+      this->texture_diffuse->bind(0);
+      this->shader->set_uniform("material.diffuse", 0);
+    }
+
+    if(this->texture_specular != nullptr) {
+      this->texture_specular->bind(1);
+      this->shader->set_uniform("material.specular", 1);
+    }
+
+    /*
+    if(this->texture_ambient != nullptr) {
+      this->texture_ambient->bind(2);
+      this->shader->set_uniform("material.ambient", 2);
+    }
+    */
   }
-
-  if(this->texture_specular != nullptr) {
-    this->texture_specular->bind(1);
-  }
-
-  /*
-  if(this->texture_ambient != nullptr) {
-    this->texture_ambient->bind(2);
-  }
-  */
-
-  this->shader->set_uniform("material.diffuse", 0);
-  this->shader->set_uniform("material.specular", 1);
-  // this->shader->set_uniform("material.ambient", 2);
 
   this->shader->set_uniform("material.shininess", this->shininess);
-}
-
-
-
-
-template<typename ...Args>
-void Material::set_uniform(Args... args) {
-  this->shader->set_uniform(std::forward<Args>(args)...);
 }
 
 
@@ -90,3 +83,11 @@ void Material::set_ambient(std::shared_ptr<Texture> tex) {
   this->texture_ambient = tex;
 }
 */
+
+
+
+
+void Material::set_use_texture(bool value) {
+  this->use_texture = value;
+}
+

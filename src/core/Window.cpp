@@ -53,6 +53,20 @@ Window::~Window() {
 
 
 
+int Window::get_width() {
+  return this->width;
+}
+
+
+
+
+int Window::get_height() {
+  return this->height;
+}
+
+
+
+
 // start gflw or sdl backend (depends on which one you use)
 int Window::init_backend() {
 #if defined(USE_WINDOW_BACKEND_LIBRARY_SDL)

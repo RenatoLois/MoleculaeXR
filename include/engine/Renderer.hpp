@@ -12,11 +12,11 @@
 
 class Renderer {
 public:
-  void render(const Camera& camera, const Mesh& mesh, Material& material, const glm::mat4& transform);
-  void render(const Camera& camera, const Mesh& mesh, Material& material, const Transform& transform);
-  void render(const Camera& camera, Model& model);
-  void render(const Camera& camera, Entity& entity);
-  void render(const Camera& camera, std::vector<std::shared_ptr<Entity>>& entities);
-  void set_view_port(Camera& camera, int w, int h);
-  void set_view_port(int w, int h);
+  void render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& transform) const;
+  void render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const Transform& transform) const;
+  void render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Model>& model) const;
+  void render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Entity>& entity) const;
+  void render(const std::shared_ptr<Camera>& camera, const std::vector<std::shared_ptr<Entity>>& entities) const;
+  void set_view_port(Camera& camera, int w, int h) const;
+  void set_view_port(int w, int h) const;
 };

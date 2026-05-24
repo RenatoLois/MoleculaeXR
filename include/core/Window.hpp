@@ -48,6 +48,10 @@ public:
   GLFWwindow* get_window() const;
 #endif
 
+  int get_width();
+
+  int get_height();
+
   // prepara a janela internamente para uso
   int init_backend();
 

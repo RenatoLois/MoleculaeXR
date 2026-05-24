@@ -78,6 +78,7 @@ Texture::~Texture() {
 void Texture::load(const cv::Mat& frame, bool to_power_of_2) {
   // deletando textura caso ja exista
   glDeleteTextures(1, &(this->id));
+  glGenTextures(1, &(this->id));
 
   glBindTexture(GL_TEXTURE_2D, this->id);
 
@@ -190,7 +191,7 @@ void Texture::load(std::string& texture_filepath, bool to_power_of_2) {
     databuffer
   );
 
-  glGenerateMipmap(GL_TEXTURE_2D);
+  // glGenerateMipmap(GL_TEXTURE_2D);
 
   if(to_power_of_2) 
     free(databuffer);

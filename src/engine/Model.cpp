@@ -11,7 +11,7 @@ Model::Model(
   const std::vector<std::shared_ptr<Material>>& materials,
   const std::vector<Transform>& transform
 ) {
-  if(! (meshs.size() != materials.size()) && ! (meshs.size() != transform.size()) ) {
+  if((meshs.size() != materials.size()) || (meshs.size() != transform.size()) ) {
     Logger::fatal("Resource size mismatch: Meshes, Materials, and Transforms must have the same count.");
   }
   

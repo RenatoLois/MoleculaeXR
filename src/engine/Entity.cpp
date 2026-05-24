@@ -1,5 +1,15 @@
-
 #include "engine/Entity.hpp"
+
+
+Entity::Entity(
+  const std::shared_ptr<Model> model,
+  const Transform& transform
+) {
+  this->model = model;
+  this->transform = transform;
+}
+
+
 
 
 void Entity::set_translation(glm::vec3 pos) {
