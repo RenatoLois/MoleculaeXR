@@ -1,4 +1,6 @@
 #include "engine/Camera.hpp"
+#include "core/Logger.hpp"
+#include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 #include <cmath>
@@ -75,6 +77,15 @@ glm::mat4 Camera::get_view_matrix() const {
 
 
 
+glm::mat4 Camera::get_ortho_matrix() const {
+  float half_width = 1;
+  float half_height = half_width / this->aspect;
+  return glm::ortho(-half_width, half_width, -half_height, half_height);
+}
+
+
+
+
 glm::mat4 Camera::get_projection_matrix() const {
   if(this->dirty_projection == false) return this->cached_projection_matrix;
 
@@ -105,6 +116,19 @@ void Camera::set_aspect(const float aspect) {
   this->aspect = aspect;
   
   this->dirty_projection = true;
+}
+
+
+
+
+void Camera::set_aspect(const float height, const float width) {
+    if (height == 0.0f) {
+        Logger::warn("Height cannot be 0, using default aspect 4/3");
+        this->aspect = 1.0f;
+    } else {
+        this->aspect = width / height;
+    }
+    this->dirty_projection = true;
 }
 
 

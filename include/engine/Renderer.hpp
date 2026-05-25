@@ -12,6 +12,9 @@
 
 class Renderer {
 public:
+  void render_fullscreen_ortho(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& transform) const;
+  void render_fullscreen_ortho(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const Transform& transform) const;
+  void render_fullscreen_ortho(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Model>& model) const;
   void render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& transform) const;
   void render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const Transform& transform) const;
   void render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Model>& model) const;

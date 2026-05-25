@@ -33,4 +33,7 @@ public:
 
   // escreve os dados dos marcadores nos seguintes atributos: this.tags_corners, this.tag_IDs
   bool detect_markers();
+
+  // pega um frame da camera, atualiza a textura e desenha um retangulo com essa textura
+  void update_camera_background();
 };

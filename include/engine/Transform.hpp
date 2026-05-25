@@ -11,7 +11,7 @@ private:
 	glm::vec3 scale = glm::vec3(1.0f);
 
   mutable glm::mat4 cached_model_matrix;
-  mutable bool dirty = false;
+  mutable bool dirty = true;
 	
 public:
 	Transform() = default;

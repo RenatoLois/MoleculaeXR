@@ -57,12 +57,15 @@ GLchar* read_shader(const char* filename) {
 Shader::Shader(const char *vtxShaderFilepath, const char *frgShaderFilepath) {
   GLchar const* vtxShaderFileBuffer = read_shader(vtxShaderFilepath);
   if(!vtxShaderFileBuffer) {
-    throw std::runtime_error("failed to open vertex shader file");
+    std::string error = std::string(vtxShaderFilepath) + "\nfailed to open vertex shader file";
+    throw std::runtime_error(error);
+
   }
   GLchar const* frgShaderFileBuffer = read_shader(frgShaderFilepath);
   if(!frgShaderFileBuffer) {
     free((void*) vtxShaderFileBuffer);
-    throw std::runtime_error("failed to open fragment shader file");
+    std::string error = std::string(frgShaderFilepath) + "\nfailed to open fragment shader file";
+    throw std::runtime_error(error);
   }
   GLuint vtxShaderId = glCreateShader(GL_VERTEX_SHADER);
   GLuint frgShaderId = glCreateShader(GL_FRAGMENT_SHADER);

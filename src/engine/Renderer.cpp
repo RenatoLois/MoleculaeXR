@@ -9,6 +9,27 @@
 #include "core/Logger.hpp"
 
 
+void Renderer::render_fullscreen_ortho(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& transform) const {
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  material->apply();
+  mesh->bind();
+  material->set_uniform("material.transform", transform);
+  material->set_uniform("material.camera_view", camera->get_view_matrix());
+  material->set_uniform("material.camera_projection", camera->get_ortho_matrix());
+  glDrawElements(GL_TRIANGLES, mesh->get_indices_size(), GL_UNSIGNED_INT, (void*) 0);
+}
+
+void Renderer::render_fullscreen_ortho(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const Transform& transform) const {
+  this->render_fullscreen_ortho(camera, mesh, material, transform.get_model_matrix());
+}
+
+void Renderer::render_fullscreen_ortho(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Model>& model) const {
+  for(auto& model_piece: model->get_model_pieces()) {
+    this->render_fullscreen_ortho(camera, model_piece.mesh, model_piece.material, model_piece.transform);
+  }
+}
+
+
 void Renderer::render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& transform) const {
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   material->apply();

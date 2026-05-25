@@ -35,22 +35,12 @@ void Transform::set_scale(const glm::vec3& scale) {
 
 glm::mat4 Transform::get_model_matrix() const {
   if(this->dirty) {
-    glm::mat4 T = glm::translate(
-      glm::mat4(1.0f),
-      this->position
-    );
+  	this->cached_model_matrix = glm::mat4(1.0f);
+  	this->cached_model_matrix = glm::scale(this->cached_model_matrix, this->scale);
+  	this->cached_model_matrix = this->cached_model_matrix * glm::mat4_cast(this->rotation);
+  	this->cached_model_matrix = glm::translate(this->cached_model_matrix, this->position);
 
-    glm::mat4 R = glm::mat4_cast(
-      this->rotation
-    );
-
-    glm::mat4 S = glm::scale(
-      glm::mat4(1.0f),
-      this->scale
-    );
-
-    this->cached_model_matrix = T * R * S;
-  	this->dirty = false;
+    this->dirty = false;
   }
 
 	return this->cached_model_matrix;

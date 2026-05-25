@@ -50,9 +50,11 @@ public:
 
   glm::mat4 get_view_matrix() const;
   glm::mat4 get_projection_matrix() const;
+  glm::mat4 get_ortho_matrix() const;
 
   void set_position(const glm::vec3& pos);
   void set_aspect(const float aspect);
+  void set_aspect(const float height, const float width);
   void set_orientation(float yaw, float pitch);
   void set_target(const glm::vec3& target);
   void set_world_up(const glm::vec3& up);
