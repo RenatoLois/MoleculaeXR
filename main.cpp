@@ -29,7 +29,9 @@ int main(int argc, char** argv) {
     delta_time = window.get_delta_time();
     render.clear();
 
-    // vision.update_camera_background();
+    glDisable(GL_DEPTH_TEST);
+    vision.update_camera_background();
+    glEnable(GL_DEPTH_TEST);
     cube.render(render, camera);
 
     window.swap_buffers();
