@@ -11,7 +11,6 @@ struct Material {
   mat4 camera_projection;
   sampler2D diffuse;
   vec4 color;
-  vec4 color;
   float shininess;
 };
 uniform Material material;

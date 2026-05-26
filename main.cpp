@@ -18,15 +18,18 @@ int main(int argc, char** argv) {
 
   Renderer render = Renderer();
   auto camera = std::make_shared<Camera>();
-  
+
+  camera->set_position(glm::vec3(0, 0, 2));
+
   Cube cube = Cube();
 
   double delta_time;
   while(!window.should_close()) {
     window.poll_events();
     delta_time = window.get_delta_time();
+    render.clear();
 
-    vision.update_camera_background();
+    // vision.update_camera_background();
     cube.render(render, camera);
 
     window.swap_buffers();

@@ -1,2 +1,4 @@
 implementar metodo de Camera: get_ortho_matrix()
 implementar classe Scene
+
+escrever no shader.cpp qual shader ele da erro no program link

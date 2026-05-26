@@ -13,6 +13,7 @@ struct Material {
   vec4 color;
   float shininess;
 };
+
 uniform Material material;
 
 out vec2 v_tex_coords;
