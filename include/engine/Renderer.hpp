@@ -22,4 +22,5 @@ public:
   void render(const std::shared_ptr<Camera>& camera, const std::vector<std::shared_ptr<Entity>>& entities) const;
   void set_view_port(Camera& camera, int w, int h) const;
   void set_view_port(int w, int h) const;
+  void clear() const;
 };

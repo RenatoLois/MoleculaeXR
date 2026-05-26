@@ -44,6 +44,7 @@ void Material::apply() const {
     */
   }
 
+  this->shader->set_uniform("material.color", this->color);
   this->shader->set_uniform("material.shininess", this->shininess);
 }
 

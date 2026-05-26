@@ -116,8 +116,8 @@ void Vision::update_camera_background() {
   );
 
   static auto bg_shader = std::make_shared<Shader>(
-    "res/shaders/vertex_bg_shader.glsl",
-    "res/shaders/fragment_bg_shader.glsl"
+    "res/shaders/vertex_shader_bg.glsl",
+    "res/shaders/fragment_shader_bg.glsl"
   );
   
   this->read();

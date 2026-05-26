@@ -6,6 +6,7 @@ struct Material {
   mat4 camera_view;
   mat4 camera_projection;
   sampler2D diffuse;
+  vec4 color;
   float shininess;
 };
 

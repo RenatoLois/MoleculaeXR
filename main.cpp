@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
     delta_time = window.get_delta_time();
 
     vision.update_camera_background();
+    cube.render(render, camera);
 
     window.swap_buffers();
   }

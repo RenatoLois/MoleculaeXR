@@ -31,7 +31,7 @@ file(GLOB_RECURSE SOURCE_FILES
 
 
 file(GLOB RESOURCES    res/assets/*.png res/assets/*.jpg res/assets/*.jpeg)
-file(GLOB SHADERS      res/shaders/*.glsl)
+file(GLOB SHADERS      res/shaders/*.glsl res/shaders/*.vert res/sharers/*.frag)
 
 set(ALL_LISTS_TO_COPY ${RESOURCES} ${SHADERS})
 

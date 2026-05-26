@@ -10,7 +10,6 @@
 
 
 void Renderer::render_fullscreen_ortho(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& transform) const {
-  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   material->apply();
   mesh->bind();
   material->set_uniform("material.transform", transform);
@@ -31,7 +30,6 @@ void Renderer::render_fullscreen_ortho(const std::shared_ptr<Camera>& camera, co
 
 
 void Renderer::render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& transform) const {
-  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   material->apply();
   mesh->bind();
   material->set_uniform("material.transform", transform);
@@ -87,4 +85,11 @@ void Renderer::set_view_port(Camera& camera, int w, int h) const {
   }
   
   camera.set_aspect((float) w / (float) h);
+}
+
+
+
+
+void Renderer::clear() const {
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 }

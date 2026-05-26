@@ -6,6 +6,7 @@ struct Material {
   mat4 camera_view;
   mat4 camera_projection;
   sampler2D diffuse;
+  vec4 color;
   float shininess;
 };
 
@@ -16,5 +17,5 @@ uniform Material material;
 out vec4 frag_color;
 
 void main() {
-  frag_color = texture(material.diffuse, v_tex_coords);
+  frag_color = material.color;
 }
