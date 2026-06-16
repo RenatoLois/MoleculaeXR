@@ -3,6 +3,7 @@
 
 #include "app/cube.hpp"
 #include "engine/Camera.hpp"
+#include "engine/Light.hpp"
 #include <memory>
 
 
@@ -11,7 +12,6 @@ void initialize(Window& window, Vision& vision);
 
 int main(int argc, char** argv) {
   Window window(600, 600, "MoleculaeXR");
-  
   Vision vision(0, cv::aruco::DICT_APRILTAG_36h11);
 
   initialize(window, vision);
@@ -19,9 +19,14 @@ int main(int argc, char** argv) {
   Renderer render = Renderer();
   auto camera = std::make_shared<Camera>();
 
-  camera->set_position(glm::vec3(0, 0, 2));
+  camera->set_position(glm::vec3(0.2,1, 5));
+  
+  auto light = std::make_shared<Light>(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
 
   Cube cube = Cube();
+  light->translate(0.0f, 5.0f, 0.0f);
+
+  // problema: a cor nao ta indo certo: testar normal e etc.
 
   double delta_time;
   while(!window.should_close()) {
@@ -32,7 +37,7 @@ int main(int argc, char** argv) {
     glDisable(GL_DEPTH_TEST);
     vision.update_camera_background();
     glEnable(GL_DEPTH_TEST);
-    cube.render(render, camera);
+    cube.render(render, camera, light);
 
     window.swap_buffers();
   }

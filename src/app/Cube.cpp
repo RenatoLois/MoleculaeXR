@@ -1,5 +1,6 @@
 #include "app/cube.hpp"
 #include "engine/Camera.hpp"
+#include "engine/Light.hpp"
 #include "engine/Renderer.hpp"
 #include "engine/Vertex.hpp"
 #include "engine/Mesh.hpp"
@@ -89,6 +90,6 @@ Cube::Cube() {
 
 
 
-void Cube::render(const Renderer& render, const std::shared_ptr<Camera>& camera) {
-  render.render(camera, this->cube_entity);
+void Cube::render(const Renderer& render, const std::shared_ptr<Camera>& camera, std::shared_ptr<Light>& light) {
+  render.render(camera, this->cube_entity, light);
 }
