@@ -8,10 +8,10 @@
 
 class Material {
 private:
-    //  std::shared_ptr<Texture> texture_ambient;
   std::shared_ptr<Shader> shader;
   std::shared_ptr<Texture> texture_diffuse = nullptr;
   std::shared_ptr<Texture> texture_specular = nullptr;
+  //  std::shared_ptr<Texture> texture_ambient;
   glm::vec4 color = glm::vec4(1.0f);
   float shininess = 32.0f;
   bool use_texture = false;
