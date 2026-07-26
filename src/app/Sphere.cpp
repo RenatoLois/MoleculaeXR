@@ -1,3 +1,4 @@
+/*
 #include "app/Sphere.hpp"
 #include "engine/Vertex.hpp"
 #include <glm/ext/vector_float3.hpp>
@@ -30,6 +31,22 @@ int num_lon_rings(int lon_level) {
   return (int) round( pow(2, lon_level) );
 }
 
+int get_sphere_vertice_index(
+    int lat_pos,
+    int lon_pos,
+    int lat_lines,
+    int lon_lines,
+    const std::shared_ptr< std::vector<Vertex> > vertices
+) {
+  lat_pos %= lat_lines + 2;  // lat_lines + 2 (indexado a 0) -> lat_lines + 1 
+                             // -> +1 por causa do módulo da divisão -> lat_lines + 2
+  lon_pos %= lon_lines;
+  int lat_sides = lat_lines + 1;
+  int lon_sides = lon_lines;
+  int index = lat_pos * lat_sides + lon_pos;
+  return index;
+}
+
 std::shared_ptr< std::vector<Vertex> > get_sphere_vertices(int lat_level, int lon_level, float radius) {
   int lat_sides = num_lat_sides(lat_level);
   int lat_lines = lat_sides - 1;
@@ -42,11 +59,11 @@ std::shared_ptr< std::vector<Vertex> > get_sphere_vertices(int lat_level, int lo
   float single_lon_angle = 2 * M_PI / lon_sides;
   
   
-  auto sphere_vertices = std::make_shared< std::vector<Vertex> >(lon_lines * lat_lines + 2);
+  auto sphere_vertices = std::make_shared< std::vector<Vertex> >();
+  sphere_vertices->reserve(lon_lines * (2 + lat_lines));  // lat_lines * lon_lines (total) + lon_lines * 2 (polos)
 
-
-  // nort vertice
-  for(int i = 1; i <= lon_sides; i++) {
+  // vértice norte
+  for (int i = 1; i <= lon_sides; i++) {
     float x_tex_coord = (single_lon_angle * i) / (M_PI * 2);
     float y_tex_coord = 1.0f;
     Vertex nort_vertice(
@@ -61,13 +78,13 @@ std::shared_ptr< std::vector<Vertex> > get_sphere_vertices(int lat_level, int lo
 
 
   // para cada ponto do poligono exceto os polos
-  for(int i = 1; i <= lat_lines; i++) {
+  for (int i = 1; i <= lat_lines; i++) {
     float y = y_lat_coord(single_lat_angle, M_PI / 2, i, radius);
 
     // float sub_circle_radius = fabs(cos(M_PI / 2 + single_lat_angle * i) * radius);
     float sub_circle_radius = sqrt((radius*radius) - (y*y));
 
-    for(int j = 1; j <= lon_lines; j++) {
+    for (int j = 1; j <= lon_lines; j++) {
       float z = z_lon_coord(single_lon_angle, 0, j, sub_circle_radius);
       float x = x_lon_coord(single_lon_angle, 0, j, sub_circle_radius);
 
@@ -80,16 +97,18 @@ std::shared_ptr< std::vector<Vertex> > get_sphere_vertices(int lat_level, int lo
       // calcular a posicao contando de um polo a outro apenas
       float y_tex_coord = (single_lat_angle * i) / (M_PI);
 
-      Vertex(
+      sphere_vertices->push_back(
+        Vertex(
           {x, y, z},
           {x_normal, y_normal, z_normal},
           {x_tex_coord, y_tex_coord}
-      ); 
+        )
+      );
     }
   }
 
-  // south vertice
-  for(int i = 1; i <= lon_sides; i++) {
+  // vértice sul
+  for (int i = 1; i <= lon_sides; i++) {
     float x_tex_coord = (single_lon_angle * i) / (M_PI * 2);
     float y_tex_coord = 0.0f;
     Vertex south_vertice(
@@ -101,13 +120,15 @@ std::shared_ptr< std::vector<Vertex> > get_sphere_vertices(int lat_level, int lo
     sphere_vertices->push_back(south_vertice);
   }
 
-  
+  for (int i = 1; i <= lat_lines + 1; i++ ) {
+    
+  }
 }
 
 Sphere::Sphere(
-    float radius,  // 1 caso nao definido
-    int h_level,   // 4 caso nao definido
-    int v_level    // 4 caso nao definido
+    float radius,  // 1, caso não definido
+    int h_level,   // 4, caso não definido
+    int v_level    // 4, caso não definido
 ) {
 
   std::vector<Vertex> sphere_vertices = get_sphere_vertices(h_level, v_level, radius);
@@ -152,3 +173,4 @@ Sphere::Sphere(
 void Cube::render(const Renderer& render, const std::shared_ptr<Camera>& camera, std::shared_ptr<Light>& light) {
   render.render(camera, this->cube_entity, light);
 }
+*/

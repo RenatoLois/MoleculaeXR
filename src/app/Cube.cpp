@@ -13,32 +13,32 @@
 #include <vector>
 
 
-Cube::Cube() {
+Cube::Cube(float size_factor) {
   std::vector<Vertex> cube_vertices = {
-    Vertex(glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0,  1,  0)),  // direita  - cima   - frente - face cima
-    Vertex(glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0,  1,  0)),  // direita  - cima   - trás   - face cima
-    Vertex(glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0,  1,  0)),  // esquerda - cima   - frente - face cima
-    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0,  1,  0)),  // esquerda - cima   - trás   - face cima
-    Vertex(glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0,  0,  1)),  // direita  - cima   - frente - face frente
-    Vertex(glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0,  0,  1)),  // esquerda - cima   - frente - face frente
-    Vertex(glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 0,  0,  1)),  // direita  - baixo  - frente - face frente
-    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0,  0,  1)),  // esquerda - baixo  - frente - face frente
-    Vertex(glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 0, -1,  0)),  // direita  - baixo  - trás   - face baixo
-    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0, -1,  0)),  // esquerda - baixo  - trás   - face baixo
-    Vertex(glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 0, -1,  0)),  // direita  - baixo  - frente - face baixo
-    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0, -1,  0)),  // esquerda - baixo  - frente - face baixo
-    Vertex(glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0,  0, -1)),  // direita  - cima   - trás   - face trás
-    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0,  0, -1)),  // esquerda - cima   - trás   - face trás
-    Vertex(glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 0,  0, -1)),  // direita  - baixo  - trás   - face trás
-    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0,  0, -1)),  // esquerda - baixo  - trás   - face trás
-    Vertex(glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 1,  0,  0)),  // direita  - cima   - frente - face direita
-    Vertex(glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 1,  0,  0)),  // direita  - cima   - trás   - face direita
-    Vertex(glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 1,  0,  0)),  // direita  - baixo  - frente - face direita
-    Vertex(glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 1,  0,  0)),  // direita  - baixo  - trás   - face direita
-    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(-1,  0,  0)),  // esquerda - cima   - trás   - face esquerda
-    Vertex(glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(-1,  0,  0)),  // esquerda - cima   - frente - face esquerda
-    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(-1,  0,  0)),  // esquerda - baixo  - frente - face esquerda
-    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(-1,  0,  0))   // esquerda - baixo  - trás   - face esquerda
+    Vertex(glm::vec3( 0.5f * size_factor,  0.5f * size_factor,  0.5f * size_factor), glm::vec3( 0,  1,  0)),  // direita  - cima   - frente - face cima
+    Vertex(glm::vec3( 0.5f * size_factor,  0.5f * size_factor, -0.5f * size_factor), glm::vec3( 0,  1,  0)),  // direita  - cima   - trás   - face cima
+    Vertex(glm::vec3(-0.5f * size_factor,  0.5f * size_factor,  0.5f * size_factor), glm::vec3( 0,  1,  0)),  // esquerda - cima   - frente - face cima
+    Vertex(glm::vec3(-0.5f * size_factor,  0.5f * size_factor, -0.5f * size_factor), glm::vec3( 0,  1,  0)),  // esquerda - cima   - trás   - face cima
+    Vertex(glm::vec3( 0.5f * size_factor,  0.5f * size_factor,  0.5f * size_factor), glm::vec3( 0,  0,  1)),  // direita  - cima   - frente - face frente
+    Vertex(glm::vec3(-0.5f * size_factor,  0.5f * size_factor,  0.5f * size_factor), glm::vec3( 0,  0,  1)),  // esquerda - cima   - frente - face frente
+    Vertex(glm::vec3( 0.5f * size_factor, -0.5f * size_factor,  0.5f * size_factor), glm::vec3( 0,  0,  1)),  // direita  - baixo  - frente - face frente
+    Vertex(glm::vec3(-0.5f * size_factor, -0.5f * size_factor,  0.5f * size_factor), glm::vec3( 0,  0,  1)),  // esquerda - baixo  - frente - face frente
+    Vertex(glm::vec3( 0.5f * size_factor, -0.5f * size_factor, -0.5f * size_factor), glm::vec3( 0, -1,  0)),  // direita  - baixo  - trás   - face baixo
+    Vertex(glm::vec3(-0.5f * size_factor, -0.5f * size_factor, -0.5f * size_factor), glm::vec3( 0, -1,  0)),  // esquerda - baixo  - trás   - face baixo
+    Vertex(glm::vec3( 0.5f * size_factor, -0.5f * size_factor,  0.5f * size_factor), glm::vec3( 0, -1,  0)),  // direita  - baixo  - frente - face baixo
+    Vertex(glm::vec3(-0.5f * size_factor, -0.5f * size_factor,  0.5f * size_factor), glm::vec3( 0, -1,  0)),  // esquerda - baixo  - frente - face baixo
+    Vertex(glm::vec3( 0.5f * size_factor,  0.5f * size_factor, -0.5f * size_factor), glm::vec3( 0,  0, -1)),  // direita  - cima   - trás   - face trás
+    Vertex(glm::vec3(-0.5f * size_factor,  0.5f * size_factor, -0.5f * size_factor), glm::vec3( 0,  0, -1)),  // esquerda - cima   - trás   - face trás
+    Vertex(glm::vec3( 0.5f * size_factor, -0.5f * size_factor, -0.5f * size_factor), glm::vec3( 0,  0, -1)),  // direita  - baixo  - trás   - face trás
+    Vertex(glm::vec3(-0.5f * size_factor, -0.5f * size_factor, -0.5f * size_factor), glm::vec3( 0,  0, -1)),  // esquerda - baixo  - trás   - face trás
+    Vertex(glm::vec3( 0.5f * size_factor,  0.5f * size_factor,  0.5f * size_factor), glm::vec3( 1,  0,  0)),  // direita  - cima   - frente - face direita
+    Vertex(glm::vec3( 0.5f * size_factor,  0.5f * size_factor, -0.5f * size_factor), glm::vec3( 1,  0,  0)),  // direita  - cima   - trás   - face direita
+    Vertex(glm::vec3( 0.5f * size_factor, -0.5f * size_factor,  0.5f * size_factor), glm::vec3( 1,  0,  0)),  // direita  - baixo  - frente - face direita
+    Vertex(glm::vec3( 0.5f * size_factor, -0.5f * size_factor, -0.5f * size_factor), glm::vec3( 1,  0,  0)),  // direita  - baixo  - trás   - face direita
+    Vertex(glm::vec3(-0.5f * size_factor,  0.5f * size_factor, -0.5f * size_factor), glm::vec3(-1,  0,  0)),  // esquerda - cima   - trás   - face esquerda
+    Vertex(glm::vec3(-0.5f * size_factor,  0.5f * size_factor,  0.5f * size_factor), glm::vec3(-1,  0,  0)),  // esquerda - cima   - frente - face esquerda
+    Vertex(glm::vec3(-0.5f * size_factor, -0.5f * size_factor,  0.5f * size_factor), glm::vec3(-1,  0,  0)),  // esquerda - baixo  - frente - face esquerda
+    Vertex(glm::vec3(-0.5f * size_factor, -0.5f * size_factor, -0.5f * size_factor), glm::vec3(-1,  0,  0))   // esquerda - baixo  - trás   - face esquerda
   };
 
   std::vector<unsigned int> cube_indices = {
@@ -52,13 +52,13 @@ Cube::Cube() {
      9, 10, 11,
 
     12, 13, 14,  // trás
-    13, 14, 15,
+    14, 13, 15,
 
     16, 17, 18,  // direita
     17, 18, 19,
 
     20, 21, 22,  // esquerda
-    21, 22, 23
+    22, 21, 23
   };
 
   Transform cube_transform(
@@ -85,6 +85,16 @@ Cube::Cube() {
   auto cube_entity = std::make_shared<Entity>(cube_model, cube_transform);
 
   this->cube_entity = cube_entity;
+}
+
+
+
+void Cube::set_transform(const Transform& transform) {
+    if (this->cube_entity) {
+        this->cube_entity->set_translation(transform.get_position());
+        this->cube_entity->set_rotation(transform.get_rotation());
+        this->cube_entity->set_scale(transform.get_scale());
+    }
 }
 
 

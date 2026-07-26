@@ -1,5 +1,7 @@
 #pragma once
 
+#include "engine/Camera.hpp"
+#include "engine/Transform.hpp"
 #include <opencv2/objdetect/aruco_detector.hpp>
 #include <opencv2/opencv.hpp>
 
@@ -33,6 +35,15 @@ public:
 
   // escreve os dados dos marcadores nos seguintes atributos: this.tags_corners, this.tag_IDs
   bool detect_markers();
+
+  // obtem a Transform de uma tag qualquer a partir de seus cantos
+  Transform get_marker_transform (
+    const std::vector<cv::Point2f>& tag_corners,
+    const Camera& camera,
+    float image_width,
+    float image_height,
+    float tag_size
+  );
 
   // pega um frame da camera, atualiza a textura e desenha um retangulo com essa textura
   void update_camera_background();

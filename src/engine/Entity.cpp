@@ -44,3 +44,17 @@ glm::mat4 Entity::get_model_matrix() const {
   return this->transform.get_model_matrix();
 }
 
+
+
+
+void Entity::add_child(std::shared_ptr<Entity> child) {
+    child->parent = this;
+    this->children.push_back(child);
+}
+
+
+
+
+const std::vector<std::shared_ptr<Entity>>& Entity::get_children() const {
+    return this->children;
+}

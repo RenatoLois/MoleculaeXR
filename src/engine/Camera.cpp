@@ -61,6 +61,20 @@ Camera::Camera(
 
 
 
+float Camera::get_aspect() const {
+  return this->aspect;
+}
+
+
+
+
+float Camera::get_zoom() const {
+  return this->zoom;
+}
+
+
+
+
 glm::mat4 Camera::get_view_matrix() const {
   if(this->dirty_view == false) return this->cached_view_matrix;
 
@@ -129,6 +143,13 @@ void Camera::set_aspect(const float height, const float width) {
         this->aspect = width / height;
     }
     this->dirty_projection = true;
+}
+
+
+
+
+void Camera::set_zoom(const float zoom) {
+  this->zoom = zoom;
 }
 
 

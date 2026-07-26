@@ -1,4 +1,16 @@
+na classe entity, poder enviar a transform direto em vez de cada um por vez.
+descomentar todo o sphere.cpp
+
+na classe camera, deixar aspect e zoom como private e fazer os getters
+na classe window, trocar std::cerr pela classe Logger
+
+
+// old
 implementar metodo de Camera: get_ortho_matrix()
 implementar classe Scene
 
 escrever no shader.cpp qual shader ele da erro no program link
+
+
+// feito
+na classe transform, trocar tudo em public para ter metodos get

@@ -1,5 +1,6 @@
 #include "core/Vision.hpp"
 #include <opencv2/core/cvstd_wrapper.hpp>
+#include <opencv2/core/types.hpp>
 #include <opencv2/objdetect/aruco_detector.hpp>
 #include <opencv2/objdetect/aruco_dictionary.hpp>
 #include <opencv2/videoio.hpp>
@@ -8,7 +9,9 @@
 #include <stdexcept>
 #include <string>
 
+#include "engine/Camera.hpp"
 #include "engine/Renderer.hpp"
+#include "engine/Transform.hpp"
 #include "engine/Vertex.hpp"
 #include "engine/Shader.hpp"
 #include "engine/Texture.hpp"
@@ -26,11 +29,11 @@ Vision::Vision(int cameraID, cv::aruco::PredefinedDictionaryType marker_type) {
 
 
 
-// open camera with id = this->id
+// abre a câmera com o id = this->id
 void Vision::open() {
   if( this->stream.isOpened() )
     throw std::runtime_error("camera already opened");
-  if( !this->stream.open(this->cameraID, cv::CAP_V4L2) ) { // change this on mobile!
+  if( !this->stream.open(this->cameraID, cv::CAP_V4L2) ) {
 /*
     if( this->stream.isOpened() )
 */
@@ -44,7 +47,7 @@ void Vision::open() {
 
 
 
-// close opened camera
+// fechar camera aberta
 void Vision::close() {
 /*
   if( !this->stream.isOpened() )
@@ -56,8 +59,8 @@ void Vision::close() {
 
 
 
-// sends an image from the camera to this->framebuffer
-// assuming the camera is opened
+// envia a imagem da câmera para this->framebuffer
+// assumindo que a câmera está aberta
 bool Vision::read() {
   return this->stream.read(this->framebuffer);
 }
@@ -76,8 +79,86 @@ cv::Mat Vision::get_framebuffer() {
 // detect april tags in framebuffer image
 // // returns false if no tag is found, otherwise returns true
 bool Vision::detect_markers() {
-  cv::aruco::detectMarkers(this->framebuffer,  cv::makePtr<cv::aruco::Dictionary>(aruco_dict), this->tags_corners, this->tag_IDs, cv::makePtr<cv::aruco::DetectorParameters>(aruco_params));
+  cv::aruco::detectMarkers(
+    this->framebuffer, 
+    cv::makePtr<cv::aruco::Dictionary>(aruco_dict),
+    this->tags_corners, this->tag_IDs,
+    cv::makePtr<cv::aruco::DetectorParameters>(aruco_params));
   return !tag_IDs.empty();
+}
+
+
+
+// procurar entender essa lógica depois
+Transform Vision::get_marker_transform (
+    const std::vector<cv::Point2f>& tag_corners,
+    const Camera& camera,
+    float image_width,
+    float image_height,
+    float tag_size
+) {
+    if (tag_corners.empty()) return Transform();
+
+    float half = tag_size / 2.0f;
+
+    std::vector<cv::Point3f> object_points = {
+        cv::Point3f(-half,  half, 0.0f),
+        cv::Point3f( half,  half, 0.0f),
+        cv::Point3f( half, -half, 0.0f),
+        cv::Point3f(-half, -half, 0.0f)
+    };
+
+    float fov_y_rad = glm::radians(camera.get_zoom());
+    float fy = (image_height / 2.0f) / std::tan(fov_y_rad / 2.0f);
+    float fx = fy;
+
+    float cx = image_width / 2.0f;
+    float cy = image_height / 2.0f;
+
+    cv::Mat camera_matrix = (cv::Mat_<double>(3, 3) <<
+        fx,  0.0, cx,
+        0.0, fy,  cy,
+        0.0, 0.0, 1.0
+    );
+
+    cv::Mat rvec, tvec;
+    cv::Mat dist_coeffs = cv::Mat::zeros(4, 1, CV_64F);
+
+    bool success = cv::solvePnP(
+        object_points,
+        tag_corners,
+        camera_matrix,
+        dist_coeffs,
+        rvec,
+        tvec,
+        false,
+        cv::SOLVEPNP_IPPE
+    );
+
+    if (!success) {
+        return Transform();
+    }
+
+    cv::Mat rotation_matrix;
+    cv::Rodrigues(rvec, rotation_matrix);
+
+    // Inverte Y e Z na posição para casar com OpenGL
+    glm::vec3 position(
+        static_cast<float>(tvec.at<double>(0)),
+        static_cast<float>(-tvec.at<double>(1)),
+        static_cast<float>(-tvec.at<double>(2))
+    );
+
+    // Matriz de Rotação
+    glm::mat3 glm_rot(
+        static_cast<float>(rotation_matrix.at<double>(0,0)), static_cast<float>(rotation_matrix.at<double>(0,1)), static_cast<float>(rotation_matrix.at<double>(0,2)),
+        static_cast<float>(rotation_matrix.at<double>(1,0)), static_cast<float>(rotation_matrix.at<double>(1,1)), static_cast<float>(rotation_matrix.at<double>(2,1)),
+        static_cast<float>(rotation_matrix.at<double>(2,0)), static_cast<float>(rotation_matrix.at<double>(2,1)), static_cast<float>(rotation_matrix.at<double>(2,2))
+    );
+
+    glm::quat rotation = glm::quat_cast(glm_rot);
+
+    return Transform(position, rotation, glm::vec3(1.0f));
 }
 
 
@@ -92,13 +173,13 @@ void Vision::update_camera_background() {
   // x and y axis is fliped
   static std::vector<Vertex> corner_vertices = {
     // up left
-    Vertex( glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f) ),
+    Vertex( glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f) ),
     // up right
-    Vertex( glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f) ),
+    Vertex( glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f) ),
     // bottom left
-    Vertex( glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f) ),
+    Vertex( glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f) ),
     // bottom right
-    Vertex( glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f) ),
+    Vertex( glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f) ),
   };
   
   static std::vector<unsigned int> corner_indices {

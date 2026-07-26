@@ -19,17 +19,18 @@ private:
   float yaw = -90.0f;
   float pitch =  0.0f;
 
-  float zoom =  45.0f;
-  float aspect = 4.0f / 3.0f;
-  
   /* mexer nisso depois
   float moviment_speed =  2.5f;
   float mouse_sensitivity =  0.1f;
   */
 
+  float zoom =  45.0f;
+  float aspect = 4.0f / 3.0f;
+
   void update_camera_vectors();
 
 public:
+
   // construtor com vetores
   Camera(
     glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
@@ -48,12 +49,16 @@ public:
     float aspect = 4.0f / 3.0f
   );
 
+  float get_aspect() const;
+  float get_zoom() const;
+
   glm::mat4 get_view_matrix() const;
   glm::mat4 get_projection_matrix() const;
   glm::mat4 get_ortho_matrix() const;
 
   void set_position(const glm::vec3& pos);
   void set_aspect(const float aspect);
+  void set_zoom(const float zoom);
   void set_aspect(const float height, const float width);
   void set_orientation(float yaw, float pitch);
   void set_target(const glm::vec3& target);

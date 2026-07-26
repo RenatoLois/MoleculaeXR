@@ -21,6 +21,7 @@ namespace arche::core {}
 
 class Window{
 protected:
+  float aspect_ratio = 1.0f;
   int width;
   int height;
   double last_time = 0, current_time;
@@ -80,4 +81,10 @@ public:
 
   // verifica se a janela foi pedida para ser fechada
   bool should_close() const ;
+
+  // obtém o aspect_ratio
+  float get_aspect_ratio() const;
+
+  // define o aspect_ratio
+  void set_aspect_ratio(float aspect_ratio);
 };

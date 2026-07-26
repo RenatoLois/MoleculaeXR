@@ -9,6 +9,9 @@ private:
   std::shared_ptr<Model> model;
   Transform transform;
 
+  Entity* parent = nullptr;
+  std::vector<std::shared_ptr<Entity>> children;
+
 public:
   Entity() = default;
   Entity(
@@ -22,4 +25,7 @@ public:
 
   std::shared_ptr<Model> get_model() const;
   glm::mat4 get_model_matrix() const;
+
+  void add_child(std::shared_ptr<Entity> child);
+  const std::vector<std::shared_ptr<Entity>>& get_children() const;
 };

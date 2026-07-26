@@ -13,19 +13,24 @@
 void window_resize_callback(GLFWwindow* window, int width, int height) {
 #if defined (USE_WINDOW_BACKEND_LIBRARY_SDL)
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
-    float aspectRatio = 1.0f / 1.0f;
-    int viewportWidth = width;
-    int viewportHeight = height;
-    if (width > (height * aspectRatio)) {
-        viewportWidth = (height * aspectRatio);
+    Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+    if (!win) return;
+
+    float aspect_ratio = win->get_aspect_ratio();
+
+    int viewport_width = width;
+    int viewport_height = height;
+    if (width > (height * aspect_ratio)) {
+        viewport_width = (height * aspect_ratio);
     } else {
-        viewportHeight = width / aspectRatio;
+        viewport_height = width / aspect_ratio;
     }
 
-    glViewport( ( (width / 2) - (viewportWidth / 2) ),
-                ( (height / 2) - (viewportHeight / 2) ),
-                viewportWidth, 
-                viewportHeight 
+    glViewport( ( (width / 2) - (viewport_width / 2) ),
+                ( (height / 2) - (viewport_height / 2) ),
+                viewport_width, 
+                viewport_height 
     );
 }
 #endif
@@ -38,6 +43,7 @@ Window::Window(int width, int height, const std::string& title) {
   this->width  = width;
   this->height = height;
   this->title  = title;
+  this->aspect_ratio = (float) this->width / (float) this->height;
 }
 
 
@@ -96,6 +102,7 @@ int Window::init() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+  glfwWindowHint(GLFW_SAMPLES, 1);
 
   this->window = glfwCreateWindow(
     this->width, 
@@ -110,6 +117,8 @@ int Window::init() {
     std::cerr << "failed to create window.\n";
     return 1;
   }
+
+  glfwSetWindowUserPointer(this->window, this);
 
   glfwMakeContextCurrent(this->window);
     
@@ -242,4 +251,12 @@ bool Window::should_close() const {
 #elif defined(USE_WINDOW_BACKEND_LIBRARY_GLFW)
   return glfwWindowShouldClose(this->window);
 #endif
+}
+
+float Window::get_aspect_ratio() const {
+  return this->aspect_ratio;
+}
+
+void Window::set_aspect_ratio(float aspect_ratio) {
+  this->aspect_ratio = aspect_ratio;
 }
