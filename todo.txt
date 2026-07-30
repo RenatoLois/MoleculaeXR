@@ -1,9 +1,15 @@
 na classe entity, poder enviar a transform direto em vez de cada um por vez.
-descomentar todo o sphere.cpp
 
-na classe camera, deixar aspect e zoom como private e fazer os getters
 na classe window, trocar std::cerr pela classe Logger
+na classe camera, usar far e near
 
+na classe cube, fazer os indices no sentindo anti-horário
+
+usarei os shaders do cube para a sphere, modificar os nome depois ou corrigir se necessario
+ver por que a esfera está ficando oval ao rotacionar
+ver pq ao girar 90° no sentido antihorario os objetos se achatam
+
+na classe texture, remover to_power_of_two da funcao update e fazer com que ela obtenha o tamanho da imagem anterior para colocar a nova
 
 // old
 implementar metodo de Camera: get_ortho_matrix()
@@ -14,3 +20,6 @@ escrever no shader.cpp qual shader ele da erro no program link
 
 // feito
 na classe transform, trocar tudo em public para ter metodos get
+na classe camera, deixar aspect e zoom como private e fazer os getters
+editar lados(n) para linhas(n) no artigo
+descomentar todo o sphere.cpp

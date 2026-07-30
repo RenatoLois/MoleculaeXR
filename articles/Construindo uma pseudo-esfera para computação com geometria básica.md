@@ -63,9 +63,8 @@ Podemos definir a construção por níveis:
 A quantidade de lados segue a expressão:
 
 $$
-lados(n)=2\cdot lados(n-1)+1
+linhas(n)=2\cdot linhas(n-1)+1
 $$
-
 onde `n` representa o nível.
 
 ---
@@ -89,19 +88,19 @@ Vamos tentar nos entreter com a aritmética até encontrar uma forma de saber a 
 
 Adicionando 1 em ambos os lados da fórmula que tinhamos:
 $$
-lados(n)+1=2\cdot lados(n-1)+2
+linhas(n)+1=2\cdot linhas(n-1)+2
 $$
 Agrupando:
 $$
-lados(n)+1=2(lados(n-1)+1)
+linhas(n)+1=2(linhas(n-1)+1)
 $$
 Agora definimos:
 $$
-m(k)=lados(k)+1
+m(k)=linhas(k)+1
 $$
 Logo:
 $$
-m(k-1)=lados(k-1)+1
+m(k-1)=linhas(k-1)+1
 $$
 
 Substituindo:
@@ -114,11 +113,11 @@ $$
 
 Sabemos que:
 $$
-lados(1)=2
+linhas(1)=2
 $$
 Então:
 $$
-m(1)=lados(1)+1
+m(1)=linhas(1)+1
 $$
 $$
 m(1)=2+1=3
@@ -127,13 +126,13 @@ $$
 Para o nível 2:
 
 $$
-lados(2)=5
+linhas(2)=5
 $$
 
 então:
 
 $$
-m(2)=lados(2)+1=6
+m(2)=linhas(2)+1=6
 $$
 
 E pela recorrência:
@@ -150,7 +149,7 @@ $$
 Para o nível 3:
 
 $$
-lados(3)=11
+linhas(3)=11
 $$
 
 logo:
@@ -169,7 +168,7 @@ m(3)=12
 $$
 Para o nível 4:
 $$
-lados(4)=23
+linhas(4)=23
 $$
 portanto:
 $$
@@ -213,16 +212,21 @@ m(n)=3\cdot2^{n-1}
 $$
 E como:
 $$
-m(n)=lados(n)+1
+m(n)=linhas(n)+1
 $$
 temos:
 $$
-lados(n)+1=3\cdot2^{n-1}
+linhas(n)+1=3\cdot2^{n-1}
 $$
 Finalmente:
 $$
-\boxed{lados(n)=3\cdot2^{n-1}-1}
+\boxed{linhas(n)=3\cdot2^{n-1}-1}
 $$
+e também:
+$$
+\boxed{lados(n)=linhas(n)+1}
+$$
+
 Com isso, podemos enfim descobrir o ângulo da abertura dos triângulos internos do polígono:
 $$
 \boxed{α_n=\frac{360}{lados(n)}}
@@ -235,6 +239,7 @@ $$
 
 
 Precisamos, em seguida, obter as coordenadas de cada ponto. Podemos usar o seno, conforme a imagem a seguir, focando no ponto E:
+
 
 ![coordenadas](<Pasted image 20260701112551.png>)
 
@@ -284,3 +289,49 @@ Temos então um ponto de partida B, presente em qualquer nível da futura esfera
 $$
 G = \pi / 2
 $$
+E, por fim, podemos definir as coordenadas `X` e `Y` no plano `XY`:
+$$
+\boxed{Y_{xy} = \sin(\alpha + G) \cdot \text{raio}}
+$$
+$$
+\boxed{X_{xy} = \cos(\alpha + G) \cdot \text{raio}}
+$$
+---
+## Obtendo as coordenadas no plano 3D
+
+Antes de mais nada, preciso que saiba diferenciar linhas latitudinais de linhas longitudinais, representados nessa ordem respectivamente, na seguinte imagem:
+
+![[Pasted image 20260708220026.png]]
+
+Para isso obtermos as coordenadas no plano 3D, precisamos analisar a esfera vista pelo plano `ZX`, focando nas linhas longitudinais:
+
+![[Pasted image 20260708221324.png]]
+
+Nesse caso, pense apenas nas linhas de longitude, assim simplificará o raciocínio.
+Em seguida, podemos definir também um nível para gerenciar a quantidade de linhas longitudinais, chamemos este nível de `n'` para não confundirmos com o nível `n` das linhas latitudinais.
+
+De certa forma, a maneira de organizar a quantia de linhas por níveis é completamente arbitrária, tanto as latitudinais quanto as longitudinais.
+Por isso, cabe a você definir a forma mais viável para sua implementação.
+Eu escolhi fazer por potências de dois, como mostrei na figura, com o objetivo de poder pensar cada duas linhas paralelos como um "anel" em volta da esfera.
+Atenção que a quantidade de linhas logintudinais para `n' = 1`  precisa ser maior ou igual a 3, visto que para funcionar os nossos seguintes passos, precisamos montar um polígono regular.
+
+Definimos logo:
+$$
+	aneis(n')=2^{n' + 1}
+$$
+$$
+	linhas(n')=2*aneis(n')
+$$
+Observer que a quantidade de áreas é igual à quantia de linhas. Temos também:
+
+![[Pasted image 20260708223608.png]]
+
+$$
+\alpha(n') = \frac{2\pi}{\text{linhas}(n')}
+$$
+Observe que, sendo essa uma visão do plano `XZ`, podemos assimilar o eixo `Z` com o eixo `Y` do plano `XY`. Dessa forma, a fórmula para obter a coordenada `Z` é semelhante à fórmula de obtenção da coordenada `Y` do plano `XY`, embora, aqui, o ângulo seja outro:
+$$
+\boxed{Z_{XZ} = \sin(\alpha) \cdot \text{raio}}
+$$
+É possível perceber intuitivamente, que, tanto no eixo `XZ` ou `XY`, as coordenadas `Y` e `Z` são permanentes. visto que um eixo é perpendicular ao outro plano e vice-versa. Logo, as coordenadas `Y` do plano `XY` e `Z` do plano `XZ` serão mantidas iguais na coordenada final do vértice da esfera. Precisamos, por fim, descobrir a coordenada X, considerando que varia de acordo com o `Y` e com o `Z`.
+

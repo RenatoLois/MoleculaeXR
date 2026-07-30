@@ -9,6 +9,7 @@ class Vision {
 private:
   int cameraID;                                             // id da camera
   cv::Mat framebuffer;                                      // buffer que armazenara o frame da camera
+  cv::Mat gray_frame;                                       // buffer em escalas de cinza para otimizar detecção
   cv::VideoCapture stream;                                  // stream de video
   cv::aruco::Dictionary aruco_dict;                         // conjunto definido de marcadores
   cv::aruco::DetectorParameters aruco_params;               // opcoes de configuracao
@@ -22,6 +23,12 @@ public:
   // tipo de marcador passado no parametro "marker_type"
   Vision(int cameraID, cv::aruco::PredefinedDictionaryType marker_type);
   
+  // define os parametros aruco
+  void set_aruco_params(const cv::aruco::DetectorParameters& aruco_params);
+
+  // obtém os parametros aruco
+  cv::aruco::DetectorParameters get_aruco_params() const;
+
   // tenta abrir a camera
   void open();
   // fecha a camera caso esteja aberta
@@ -46,5 +53,5 @@ public:
   );
 
   // pega um frame da camera, atualiza a textura e desenha um retangulo com essa textura
-  void update_camera_background();
+  void update_camera_background(float aspect_ratio);
 };

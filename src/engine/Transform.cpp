@@ -1,4 +1,5 @@
 #include "engine/Transform.hpp"
+#include <glm/ext/quaternion_common.hpp>
 
 Transform::Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale) {
 	this->position = position;
@@ -65,4 +66,20 @@ glm::quat Transform::get_rotation() const {
 
 glm::vec3 Transform::get_scale() const {
   return this->scale;
+}
+
+
+
+
+void Transform::tranlate_local(glm::vec3 offset) {
+  this->position += this->rotation * offset;
+  this->dirty = true;
+}
+
+
+
+
+void Transform::translate_global(glm::vec3 offset) {
+  this->position += offset;
+  this->dirty = true;
 }

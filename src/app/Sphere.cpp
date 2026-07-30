@@ -1,4 +1,3 @@
-/*
 #include "app/Sphere.hpp"
 #include "engine/Vertex.hpp"
 #include <glm/ext/vector_float3.hpp>
@@ -7,7 +6,13 @@
 #include <cmath>
 
 
-int num_lat_sides(int lat_level) {
+struct vertices_and_indices_pointers {
+  std::shared_ptr<std::vector<Vertex>> vertices;
+  std::shared_ptr<std::vector<unsigned int>> indices;
+};
+
+
+int num_lat_lines(int lat_level) {
   return 3 * (int) round( pow(2, lat_level-1) ) - 1;
 }
 
@@ -47,11 +52,11 @@ int get_sphere_vertice_index(
   return index;
 }
 
-std::shared_ptr< std::vector<Vertex> > get_sphere_vertices(int lat_level, int lon_level, float radius) {
-  int lat_sides = num_lat_sides(lat_level);
-  int lat_lines = lat_sides - 1;
+struct vertices_and_indices_pointers get_sphere_vertices_and_indices(int lat_level, int lon_level, float radius) {
+  int lat_lines = num_lat_lines(lat_level);
+  int lat_sides = lat_lines + 1;
 
-  float single_lat_angle = 2 * M_PI / (float) lat_sides;
+  float single_lat_angle = M_PI / (float) lat_sides;
 
   int lon_sides = num_lon_rings(lon_level) * 2;
   int lon_lines = lon_sides;
@@ -67,8 +72,8 @@ std::shared_ptr< std::vector<Vertex> > get_sphere_vertices(int lat_level, int lo
     float x_tex_coord = (single_lon_angle * i) / (M_PI * 2);
     float y_tex_coord = 1.0f;
     Vertex nort_vertice(
-      {0, radius, 0},
-      {0, radius, 0},
+      {0.0f, radius, 0.0f},
+      {0.0f, 1.0f, 0.0f},
       {x_tex_coord, y_tex_coord}
     );
 
@@ -81,8 +86,8 @@ std::shared_ptr< std::vector<Vertex> > get_sphere_vertices(int lat_level, int lo
   for (int i = 1; i <= lat_lines; i++) {
     float y = y_lat_coord(single_lat_angle, M_PI / 2, i, radius);
 
-    // float sub_circle_radius = fabs(cos(M_PI / 2 + single_lat_angle * i) * radius);
-    float sub_circle_radius = sqrt((radius*radius) - (y*y));
+    //float sub_circle_radius = sqrt((radius*radius) - (y*y));
+    float sub_circle_radius = fabs(cos(M_PI / 2.0f + single_lat_angle * i) * radius);
 
     for (int j = 1; j <= lon_lines; j++) {
       float z = z_lon_coord(single_lon_angle, 0, j, sub_circle_radius);
@@ -112,65 +117,107 @@ std::shared_ptr< std::vector<Vertex> > get_sphere_vertices(int lat_level, int lo
     float x_tex_coord = (single_lon_angle * i) / (M_PI * 2);
     float y_tex_coord = 0.0f;
     Vertex south_vertice(
-      {0, -radius, 0},
-      {0, -radius, 0},
+      {0.0f, -radius, 0.0f},
+      {0.0f, -1.0f, 0.0f},
       {x_tex_coord, y_tex_coord}
     );
 
     sphere_vertices->push_back(south_vertice);
   }
 
-  for (int i = 1; i <= lat_lines + 1; i++ ) {
-    
+
+  auto sphere_indices = std::make_shared< std::vector<unsigned int> >();
+
+  // indices do norte
+  for(int i = 0; i < lon_lines; i++) {
+    sphere_indices->push_back(i);
+    sphere_indices->push_back(i + lon_lines);
+    sphere_indices-> push_back( (i + 1) % (lon_lines) + lon_lines);
   }
+
+  // indices da malha da esfera
+  for(int i = 1; i < lat_lines; i++) {
+    for(int j = 0; j < lon_lines; j++) {
+      sphere_indices->push_back(i * lon_lines + j);
+      sphere_indices->push_back( (i + 1) * lon_lines + j);
+      sphere_indices->push_back( (i + 1) * lon_lines + (j + 1) % lon_lines );
+
+      sphere_indices->push_back(i * lon_lines + j);
+      sphere_indices->push_back( (i + 1) * lon_lines + (j + 1) % lon_lines );
+      sphere_indices->push_back(i * lon_lines + (j + 1) % lon_lines);
+    }
+  }
+
+  // indices do sul
+  for(int i = 0; i < lon_lines; i++) {
+    sphere_indices->push_back(i + lat_sides * lon_lines);
+    sphere_indices-> push_back( ( (i + 1) % (lon_lines) ) + (lat_sides - 1) * lon_lines);
+    sphere_indices->push_back(i + (lat_sides - 1) * lon_lines);
+  }
+
+
+  return {
+    sphere_vertices,
+    sphere_indices
+  };
 }
 
 Sphere::Sphere(
-    float radius,  // 1, caso não definido
-    int h_level,   // 4, caso não definido
-    int v_level    // 4, caso não definido
+  float radius,
+  int lat_level,
+  int lon_level
 ) {
+  auto [
+    sphere_vertices,
+    sphere_indices
+  ] = get_sphere_vertices_and_indices(
+    lat_level,
+    lon_level,
+    radius
+  );
 
-  std::vector<Vertex> sphere_vertices = get_sphere_vertices(h_level, v_level, radius);
-
-  std::vector<unsigned int> cube_indices = {
-  };
-
-
-
-
-
-
-  Transform cube_transform(
+  Transform sphere_transform(
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::quat(1.0f, 0.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 1.0f)
   );
 
-  auto cube_mesh = std::make_shared<Mesh>(cube_vertices, cube_indices);
+  auto sphere_mesh = std::make_shared<Mesh>(*sphere_vertices, *sphere_indices);
 
-  auto cube_shader = std::make_shared<Shader>("res/shaders/cube.vert", "res/shaders/cube.frag");
+  auto sphere_shader = std::make_shared<Shader>("res/shaders/cube.vert", "res/shaders/cube.frag");
 
-  auto cube_material = std::make_shared<Material>(
-    cube_shader,
+  auto sphere_material = std::make_shared<Material>(
+    sphere_shader,
     glm::vec4(0.5f, 0.5f, 0.9f, 1.0f)
   );
 
-  auto cube_model = std::make_shared<Model>(
-    std::vector<std::shared_ptr<Mesh>>{cube_mesh},
-    std::vector<std::shared_ptr<Material>>{cube_material},
-    std::vector<Transform>{cube_transform}
+  sphere_material->set_color(1.0f, 0.0f, 0.0f, 1.0f);
+
+  auto sphere_model = std::make_shared<Model>(
+    std::vector<std::shared_ptr<Mesh>>{sphere_mesh},
+    std::vector<std::shared_ptr<Material>>{sphere_material},
+    std::vector<Transform>{sphere_transform}
   );
 
-  auto cube_entity = std::make_shared<Entity>(cube_model, cube_transform);
+  auto sphere_entity = std::make_shared<Entity>(sphere_model, sphere_transform);
 
-  this->cube_entity = cube_entity;
+  this->sphere_entity = sphere_entity;
 }
 
 
 
 
-void Cube::render(const Renderer& render, const std::shared_ptr<Camera>& camera, std::shared_ptr<Light>& light) {
-  render.render(camera, this->cube_entity, light);
+void Sphere::set_transform(const Transform& transform) {
+    if (this->sphere_entity) {
+        this->sphere_entity->set_translation(transform.get_position());
+        this->sphere_entity->set_rotation(transform.get_rotation());
+        this->sphere_entity->set_scale(transform.get_scale());
+    }
 }
-*/
+
+
+
+
+void Sphere::render(const Renderer& render, const std::shared_ptr<Camera>& camera, std::shared_ptr<Light>& light) {
+  render.render(camera, this->sphere_entity, light);
+}

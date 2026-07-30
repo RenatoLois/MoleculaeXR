@@ -7,6 +7,7 @@ class Camera {
 private:
   mutable glm::mat4 cached_view_matrix;
   mutable glm::mat4 cached_projection_matrix;
+  
   mutable bool dirty_view = true;
   mutable bool dirty_projection = true;
 
@@ -16,7 +17,7 @@ private:
   glm::vec3 up;
   glm::vec3 world_up = {0, 1, 0};
 
-  float yaw = -90.0f;
+  float yaw   = -90.0f;
   float pitch =  0.0f;
 
   /* mexer nisso depois
@@ -24,13 +25,15 @@ private:
   float mouse_sensitivity =  0.1f;
   */
 
-  float zoom =  45.0f;
+  float zoom   =  45.0f;
   float aspect = 4.0f / 3.0f;
+
+  float near = 0.01f;
+  float far  = 100.0f;
 
   void update_camera_vectors();
 
 public:
-
   // construtor com vetores
   Camera(
     glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
@@ -51,6 +54,9 @@ public:
 
   float get_aspect() const;
   float get_zoom() const;
+  float get_near() const;
+  float get_far() const;
+
 
   glm::mat4 get_view_matrix() const;
   glm::mat4 get_projection_matrix() const;
@@ -63,4 +69,6 @@ public:
   void set_orientation(float yaw, float pitch);
   void set_target(const glm::vec3& target);
   void set_world_up(const glm::vec3& up);
+  void set_near(float near);
+  void set_far(float far);
 };

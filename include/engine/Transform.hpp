@@ -27,4 +27,7 @@ public:
   glm::vec3 get_scale() const;
 
 	glm::mat4 get_model_matrix() const;
+
+  void tranlate_local(glm::vec3 offset);
+  void translate_global(glm::vec3 offset);
 };

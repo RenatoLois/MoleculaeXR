@@ -106,12 +106,26 @@ glm::mat4 Camera::get_projection_matrix() const {
   this->cached_projection_matrix = glm::perspective(
     glm::radians(this->zoom),
     this->aspect,
-    0.1f,
-    100.0f
+    this->near,
+    this->far
   );
 
   this->dirty_projection = false;
   return this->cached_projection_matrix;
+}
+
+
+
+
+float Camera::get_near() const {
+  return this->near;
+}
+
+
+
+
+float Camera::get_far() const {
+  return this->far;
 }
 
 
@@ -150,6 +164,7 @@ void Camera::set_aspect(const float height, const float width) {
 
 void Camera::set_zoom(const float zoom) {
   this->zoom = zoom;
+  this->dirty_projection = true;
 }
 
 
@@ -185,4 +200,20 @@ void Camera::set_world_up(const glm::vec3& up) {
   update_camera_vectors();
 
 //  this->dirty_view = true; // update_camera_vectors() ja faz isso
+}
+
+
+
+
+void Camera::set_near(float near) {
+  this->near = near;
+  this->dirty_projection = true;
+}
+
+
+
+
+void Camera::set_far(float far) {
+  this->far = far;
+  this->dirty_projection = true;
 }

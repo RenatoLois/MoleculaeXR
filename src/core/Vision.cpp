@@ -23,7 +23,21 @@ Vision::Vision(int cameraID, cv::aruco::PredefinedDictionaryType marker_type) {
   this->cameraID = cameraID;
   this->aruco_dict   = cv::aruco::getPredefinedDictionary(marker_type);
   this->aruco_params = cv::aruco::DetectorParameters();
-  aruco_params.markerBorderBits = 1;
+  this->aruco_params.markerBorderBits = 1;
+}
+
+
+
+
+void Vision::set_aruco_params(const cv::aruco::DetectorParameters& aruco_params) {
+  this->aruco_params = aruco_params;
+}
+
+
+
+
+cv::aruco::DetectorParameters Vision::get_aruco_params() const {
+  return this->aruco_params;
 }
 
 
@@ -40,6 +54,9 @@ void Vision::open() {
       this->stream.release();
     throw std::runtime_error( "failed to open camera with id " + std::to_string(this->cameraID) );
   }
+
+  this->stream.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+  this->stream.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
 
   this->stream.set(cv::CAP_PROP_BUFFERSIZE, 1);
 }
@@ -79,8 +96,10 @@ cv::Mat Vision::get_framebuffer() {
 // detect april tags in framebuffer image
 // // returns false if no tag is found, otherwise returns true
 bool Vision::detect_markers() {
+  cv::cvtColor(this->framebuffer, this->gray_frame, cv::COLOR_BGR2GRAY);
+
   cv::aruco::detectMarkers(
-    this->framebuffer, 
+    this->gray_frame, 
     cv::makePtr<cv::aruco::Dictionary>(aruco_dict),
     this->tags_corners, this->tag_IDs,
     cv::makePtr<cv::aruco::DetectorParameters>(aruco_params));
@@ -89,18 +108,20 @@ bool Vision::detect_markers() {
 
 
 
-// procurar entender essa lógica depois
-Transform Vision::get_marker_transform (
+// procurar entender essa lógica depois, gerado por IA
+Transform Vision::get_marker_transform(
     const std::vector<cv::Point2f>& tag_corners,
     const Camera& camera,
     float image_width,
     float image_height,
     float tag_size
 ) {
-    if (tag_corners.empty()) return Transform();
+    // Garante que temos exatamente 4 cantos para resolver o PnP
+    if (tag_corners.size() != 4) return Transform();
 
     float half = tag_size / 2.0f;
 
+    // Coordenadas 3D do objeto (Top-Left, Top-Right, Bottom-Right, Bottom-Left)
     std::vector<cv::Point3f> object_points = {
         cv::Point3f(-half,  half, 0.0f),
         cv::Point3f( half,  half, 0.0f),
@@ -108,9 +129,10 @@ Transform Vision::get_marker_transform (
         cv::Point3f(-half, -half, 0.0f)
     };
 
+    // Parâmetros Intrínsecos da Câmera
     float fov_y_rad = glm::radians(camera.get_zoom());
     float fy = (image_height / 2.0f) / std::tan(fov_y_rad / 2.0f);
-    float fx = fy;
+    float fx = fy; // Assumindo pixels quadrados
 
     float cx = image_width / 2.0f;
     float cy = image_height / 2.0f;
@@ -132,7 +154,7 @@ Transform Vision::get_marker_transform (
         rvec,
         tvec,
         false,
-        cv::SOLVEPNP_IPPE
+        cv::SOLVEPNP_IPPE_SQUARE
     );
 
     if (!success) {
@@ -142,19 +164,30 @@ Transform Vision::get_marker_transform (
     cv::Mat rotation_matrix;
     cv::Rodrigues(rvec, rotation_matrix);
 
-    // Inverte Y e Z na posição para casar com OpenGL
+    // Inversão de Y e Z para compatibilidade com o sistema de coordenadas do OpenGL
     glm::vec3 position(
         static_cast<float>(tvec.at<double>(0)),
         static_cast<float>(-tvec.at<double>(1)),
         static_cast<float>(-tvec.at<double>(2))
     );
 
-    // Matriz de Rotação
-    glm::mat3 glm_rot(
-        static_cast<float>(rotation_matrix.at<double>(0,0)), static_cast<float>(rotation_matrix.at<double>(0,1)), static_cast<float>(rotation_matrix.at<double>(0,2)),
-        static_cast<float>(rotation_matrix.at<double>(1,0)), static_cast<float>(rotation_matrix.at<double>(1,1)), static_cast<float>(rotation_matrix.at<double>(2,1)),
-        static_cast<float>(rotation_matrix.at<double>(2,0)), static_cast<float>(rotation_matrix.at<double>(2,1)), static_cast<float>(rotation_matrix.at<double>(2,2))
-    );
+    // Mapeamento correto da matriz 3x3 OpenCV para GLM (Column-Major)
+    glm::mat3 glm_rot(1.0f);
+    
+    // Coluna 0
+    glm_rot[0][0] =  static_cast<float>(rotation_matrix.at<double>(0,0));
+    glm_rot[0][1] = -static_cast<float>(rotation_matrix.at<double>(1,0));
+    glm_rot[0][2] = -static_cast<float>(rotation_matrix.at<double>(2,0));
+
+    // Coluna 1
+    glm_rot[1][0] =  static_cast<float>(rotation_matrix.at<double>(0,1));
+    glm_rot[1][1] = -static_cast<float>(rotation_matrix.at<double>(1,1));
+    glm_rot[1][2] = -static_cast<float>(rotation_matrix.at<double>(2,1));
+
+    // Coluna 2
+    glm_rot[2][0] =  static_cast<float>(rotation_matrix.at<double>(0,2));
+    glm_rot[2][1] = -static_cast<float>(rotation_matrix.at<double>(1,2));
+    glm_rot[2][2] = -static_cast<float>(rotation_matrix.at<double>(2,2));
 
     glm::quat rotation = glm::quat_cast(glm_rot);
 
@@ -164,7 +197,8 @@ Transform Vision::get_marker_transform (
 
 
 
-void Vision::update_camera_background() {
+
+void Vision::update_camera_background(float aspect_ratio) {
   static bool first_time = true;
   static Renderer bg_renderer;
 
@@ -206,7 +240,7 @@ void Vision::update_camera_background() {
   static auto bg_material = std::make_shared<Material>(bg_shader);
 
   if (first_time) {
-    camera->set_aspect(1.0f);
+    camera->set_aspect(aspect_ratio);
 
     texture_background->load(this->get_framebuffer(), true);
     

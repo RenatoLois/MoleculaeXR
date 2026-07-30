@@ -35,8 +35,8 @@ Cube::Cube(float size_factor) {
     Vertex(glm::vec3( 0.5f * size_factor,  0.5f * size_factor, -0.5f * size_factor), glm::vec3( 1,  0,  0)),  // direita  - cima   - trás   - face direita
     Vertex(glm::vec3( 0.5f * size_factor, -0.5f * size_factor,  0.5f * size_factor), glm::vec3( 1,  0,  0)),  // direita  - baixo  - frente - face direita
     Vertex(glm::vec3( 0.5f * size_factor, -0.5f * size_factor, -0.5f * size_factor), glm::vec3( 1,  0,  0)),  // direita  - baixo  - trás   - face direita
-    Vertex(glm::vec3(-0.5f * size_factor,  0.5f * size_factor, -0.5f * size_factor), glm::vec3(-1,  0,  0)),  // esquerda - cima   - trás   - face esquerda
     Vertex(glm::vec3(-0.5f * size_factor,  0.5f * size_factor,  0.5f * size_factor), glm::vec3(-1,  0,  0)),  // esquerda - cima   - frente - face esquerda
+    Vertex(glm::vec3(-0.5f * size_factor,  0.5f * size_factor, -0.5f * size_factor), glm::vec3(-1,  0,  0)),  // esquerda - cima   - trás   - face esquerda
     Vertex(glm::vec3(-0.5f * size_factor, -0.5f * size_factor,  0.5f * size_factor), glm::vec3(-1,  0,  0)),  // esquerda - baixo  - frente - face esquerda
     Vertex(glm::vec3(-0.5f * size_factor, -0.5f * size_factor, -0.5f * size_factor), glm::vec3(-1,  0,  0))   // esquerda - baixo  - trás   - face esquerda
   };
