@@ -18,7 +18,7 @@ public:
     const std::shared_ptr<Model> model,
     const Transform& transform
   );
-
+  
   void set_translation(glm::vec3 pos);
   void set_rotation(glm::quat rotation);
   void set_scale(glm::vec3 scale);

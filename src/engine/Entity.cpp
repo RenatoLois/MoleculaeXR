@@ -1,4 +1,5 @@
 #include "engine/Entity.hpp"
+#include <memory>
 
 
 Entity::Entity(

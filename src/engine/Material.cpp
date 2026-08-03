@@ -51,6 +51,13 @@ void Material::apply() const {
 
 
 
+glm::vec4 Material::get_color() const {
+  return this->color;
+}
+
+
+
+
 void Material::set_color(glm::vec4 color) {
   this->color = color;
 }

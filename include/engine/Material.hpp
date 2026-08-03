@@ -36,6 +36,7 @@ public:
     this->shader->set_uniform(std::forward<Args>(args)...);
   }
 
+  glm::vec4 get_color() const;
   void set_color(glm::vec4 color);
   void set_color(float r, float g, float b, float a);
 

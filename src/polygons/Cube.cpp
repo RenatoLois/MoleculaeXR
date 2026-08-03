@@ -1,4 +1,4 @@
-#include "app/cube.hpp"
+#include "polygons/cube.hpp"
 #include "engine/Camera.hpp"
 #include "engine/Light.hpp"
 #include "engine/Renderer.hpp"
@@ -69,7 +69,7 @@ Cube::Cube(float size_factor) {
 
   auto cube_mesh = std::make_shared<Mesh>(cube_vertices, cube_indices);
 
-  auto cube_shader = std::make_shared<Shader>("res/shaders/cube.vert", "res/shaders/cube.frag");
+  auto cube_shader = std::make_shared<Shader>("res/shaders/polygon.vert", "res/shaders/polygon.frag");
 
   auto cube_material = std::make_shared<Material>(
     cube_shader,

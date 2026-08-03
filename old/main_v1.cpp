@@ -1,10 +1,12 @@
-#include "app/Sphere.hpp"
+#include "app/Hydrogen.hpp"
+#include "app/Oxygen.hpp"
 #include "core/Window.hpp"
 #include "core/Vision.hpp"
-
-#include "app/cube.hpp"
+#include "polygons/Sphere.hpp"
+#include "polygons/cube.hpp"
 #include "engine/Camera.hpp"
 #include "engine/Light.hpp"
+#include "app/ATOM_TAG_IDS_CONSTANTS.hpp"
 #include <memory>
 #include <opencv2/objdetect/aruco_detector.hpp>
 
@@ -13,7 +15,6 @@ void initialize(Window& window, Vision& vision);
 
 
 int main(int argc, char** argv) {
-
   const float TAG_SIZE_METERS = 0.02f;
   const int TAG_DEBUG_CUBE = 10;
   const int TAG_DEBUG_SPHERE = 11;
@@ -49,7 +50,10 @@ int main(int argc, char** argv) {
   
   auto light = std::make_shared<Light>(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
   light->translate(0.0f, 5.0f, 0.0f);
-  
+ 
+  Hydrogen hydrogen(MOLECULAEXR_TAG_ID_HYDROGEN, TAG_SIZE_METERS, 4, 4);
+  Oxygen oxygen(MOLECULAEXR_TAG_ID_OXYGEN, TAG_SIZE_METERS, 4, 4);
+
   Cube cube(TAG_SIZE_METERS);
   Sphere sphere(TAG_SIZE_METERS / 2, 3, 3);
 
@@ -85,6 +89,14 @@ int main(int argc, char** argv) {
           case TAG_DEBUG_SPHERE:
             sphere.set_transform(marker_transform);
             sphere.render(render, ar_camera, light);
+            break;
+          case MOLECULAEXR_TAG_ID_HYDROGEN:
+            hydrogen.atom_sphere.set_transform(marker_transform);
+            hydrogen.atom_sphere.render(render, ar_camera, light);
+            break;
+          case MOLECULAEXR_TAG_ID_OXYGEN:
+            oxygen.atom_sphere.set_transform(marker_transform);
+            oxygen.atom_sphere.render(render, ar_camera, light);
             break;
           default:
             break;

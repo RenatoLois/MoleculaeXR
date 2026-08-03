@@ -11,9 +11,11 @@ include_directories (
 )
 
 
+#[[ troquei main.cpp para src/app/
 set( MAIN_FILE
   main.cpp
 )
+]]
 
 set( GLAD_SRC
   external/glad/src/glad.c
@@ -46,7 +48,7 @@ endForeach()
 
 
 add_executable( MoleculaeXR
-  ${MAIN_FILE}
+  #  ${MAIN_FILE}  já está em ${SOURCE_FILES}
   ${SOURCE_FILES}
   ${GLAD_SRC}
   ${STB_SRC}

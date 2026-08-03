@@ -1,4 +1,6 @@
-#include "app/Sphere.hpp"
+#include "polygons/Sphere.hpp"
+#include "core/Logger.hpp"
+#include "engine/Material.hpp"
 #include "engine/Vertex.hpp"
 #include <glm/ext/vector_float3.hpp>
 #include <memory>
@@ -165,7 +167,8 @@ struct vertices_and_indices_pointers get_sphere_vertices_and_indices(int lat_lev
 Sphere::Sphere(
   float radius,
   int lat_level,
-  int lon_level
+  int lon_level,
+  glm::vec4 sphere_color  // default = {1.0f, 0.0f, 0.0f, 1.0f}
 ) {
   auto [
     sphere_vertices,
@@ -184,14 +187,14 @@ Sphere::Sphere(
 
   auto sphere_mesh = std::make_shared<Mesh>(*sphere_vertices, *sphere_indices);
 
-  auto sphere_shader = std::make_shared<Shader>("res/shaders/cube.vert", "res/shaders/cube.frag");
+  auto sphere_shader = std::make_shared<Shader>("res/shaders/polygon.vert", "res/shaders/polygon.frag");
 
   auto sphere_material = std::make_shared<Material>(
     sphere_shader,
     glm::vec4(0.5f, 0.5f, 0.9f, 1.0f)
   );
 
-  sphere_material->set_color(1.0f, 0.0f, 0.0f, 1.0f);
+  sphere_material->set_color(sphere_color);
 
   auto sphere_model = std::make_shared<Model>(
     std::vector<std::shared_ptr<Mesh>>{sphere_mesh},
@@ -213,6 +216,30 @@ void Sphere::set_transform(const Transform& transform) {
         this->sphere_entity->set_rotation(transform.get_rotation());
         this->sphere_entity->set_scale(transform.get_scale());
     }
+}
+
+
+
+
+glm::vec4 Sphere::get_color() const {
+  auto model_piece_vector = this->sphere_entity->get_model()->get_model_pieces();
+  if(model_piece_vector.size() != 1) {
+    Logger::fatal("Sphere entity->model->model_pieces_vector must have a size of 1, but it doesn't.");
+  }
+
+  return model_piece_vector[0].material->get_color();
+}
+
+
+
+
+void Sphere::set_color(const glm::vec4& color) {
+  auto model_piece_vector = this->sphere_entity->get_model()->get_model_pieces();
+  if(model_piece_vector.size() != 1) {
+    Logger::fatal("Sphere entity->model->model_pieces_vector must have a size of 1, but it doesn't.");
+  }
+
+  return model_piece_vector[0].material->set_color(color);
 }
 
 

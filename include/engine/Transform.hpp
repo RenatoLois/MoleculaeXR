@@ -14,9 +14,34 @@ public:
   mutable glm::mat4 cached_model_matrix;
   mutable bool dirty = true;
 	
-// public:
+  static Transform smooth_transform(
+    const Transform& current_transform,
+    const Transform& target,
+    const float smoothing_factor, 
+    double delta_time
+  );
+
+  static glm::vec4 smooth_color(
+    const glm::vec4& current_color, 
+    const glm::vec4& target_color,
+    float speed,
+    float delta_time
+  );
+
+  static glm::vec4 smooth_color_exponential(
+    const glm::vec4& current_color,
+    const glm::vec4& target_color,
+    float decay_rate,
+    double delta_time
+  );
+
+
 	Transform() = default;
-	Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale);
+	Transform(
+    const glm::vec3& position,
+    const glm::quat& rotation,
+    const glm::vec3& scale
+  );
 
 	void set_position(const glm::vec3& position);
 	void set_rotation(const glm::quat& rotation);
@@ -28,6 +53,6 @@ public:
 
 	glm::mat4 get_model_matrix() const;
 
-  void tranlate_local(glm::vec3 offset);
+  void translate_local(glm::vec3 offset);
   void translate_global(glm::vec3 offset);
 };
