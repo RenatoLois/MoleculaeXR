@@ -210,12 +210,20 @@ Sphere::Sphere(
 
 
 
+Transform Sphere::get_transform() const {
+  return this->sphere_entity->get_transform();
+}
+
+
+
+
 void Sphere::set_transform(const Transform& transform) {
-    if (this->sphere_entity) {
-        this->sphere_entity->set_translation(transform.get_position());
-        this->sphere_entity->set_rotation(transform.get_rotation());
-        this->sphere_entity->set_scale(transform.get_scale());
-    }
+  /*
+  this->sphere_entity->set_translation(transform.get_position());
+  this->sphere_entity->set_rotation(transform.get_rotation());
+  this->sphere_entity->set_scale(transform.get_scale());
+  */
+  this->sphere_entity->set_transform(transform);
 }
 
 

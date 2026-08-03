@@ -23,6 +23,7 @@ Transform Transform::smooth_transform(
   glm::quat q_current = current_transform.get_rotation();
 
   // Se o dot product for negativo, inverte o quaternion alvo para forçar o caminho mais curto
+  // trecho recomendado por IA, talvez possa estar errado, preciso estudar mais vetores
   if (glm::dot(q_current, q_target) < 0.0f) {
     q_target = -q_target;
   }

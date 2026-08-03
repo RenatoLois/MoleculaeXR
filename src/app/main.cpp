@@ -18,7 +18,7 @@
       Transform smooth_transform = Transform::smooth_transform( \
         detected_tags[(tag_id)].last_marker_transform, \
         detected_tags[(tag_id)].current_marker_transform, \
-        10.0f, \
+        25.0f, \
         delta_time \
       ); \
       (atom_obj).atom_sphere.set_transform(smooth_transform); \
@@ -49,6 +49,11 @@ int main(int argc, char** argv) {
   std::vector<int> last_tag_ids;
   int active_not_detected_tags[MAX_TAGS_APRILTAG_36H11 + 15]; // criado aqui para otimizar e nao ficar recriando toda hora
   int num_active_not_detected_tags;                           // criado aqui para otimizar e nao ficar recriando toda hora
+
+  glm::vec3 h0_anim_position(0.0f);
+  glm::vec3 h1_anim_position(0.0f);
+
+  bool was_bonded_last_frame = false;
 
 
   for (size_t i = 0; i < MAX_TAGS_APRILTAG_36H11 + 15; ++i) {
@@ -233,7 +238,17 @@ int main(int argc, char** argv) {
       chemical_bonds[h0_h1_o0_to_h20_index] = false;
     }
 
+    if (chemical_bonds[h0_h1_o0_to_h20_index] && !was_bonded_last_frame) {
+      h0_anim_position = detected_tags[MOLECULAEXR_TAG_ID_HYDROGEN_0].current_marker_transform.get_position();
+      h1_anim_position = detected_tags[MOLECULAEXR_TAG_ID_HYDROGEN_1].current_marker_transform.get_position();
+    }
+    was_bonded_last_frame = chemical_bonds[h0_h1_o0_to_h20_index];
+
     if( ! chemical_bonds[h0_h1_o0_to_h20_index] ) {
+      hydrogen_0.set_color(Transform::smooth_color(hydrogen_0.get_color(), HYDROGEN_SPHERE_COLOR, 3.5f, delta_time));
+      hydrogen_1.set_color(Transform::smooth_color(hydrogen_1.get_color(), HYDROGEN_SPHERE_COLOR, 3.5f, delta_time));
+      oxygen_0.set_color(Transform::smooth_color(oxygen_0.get_color(), OXYGEN_SPHERE_COLOR, 3.5f, delta_time));
+
       if (detected_tags[MOLECULAEXR_TAG_ID_HYDROGEN_0].active) {
         RENDER_ATOM(MOLECULAEXR_TAG_ID_HYDROGEN_0, hydrogen_0);
       }
@@ -247,7 +262,42 @@ int main(int argc, char** argv) {
       }
     } else {
       // aqui ocorre a disgraca da animacao
- //     hydrogen_0.set_color(Transform::smooth_color(hydrogen_0.get_color(), H2O_MOLECULE_COLOR, 10.0f, float delta_time))
+      hydrogen_0.set_color(Transform::smooth_color(hydrogen_0.get_color(), H2O_MOLECULE_COLOR, 2.0f, delta_time));
+      hydrogen_1.set_color(Transform::smooth_color(hydrogen_1.get_color(), H2O_MOLECULE_COLOR, 2.0f, delta_time));
+      oxygen_0.set_color(Transform::smooth_color(oxygen_0.get_color(), H2O_MOLECULE_COLOR, 2.0f, delta_time));
+
+      RENDER_ATOM(MOLECULAEXR_TAG_ID_OXYGEN_0, oxygen_0);
+
+      glm::vec3 oxygen_pos = oxygen_0.atom_sphere.get_transform().get_position();
+      float pull_factor = 0.5f; 
+
+      Transform h0_tag_transform = detected_tags[MOLECULAEXR_TAG_ID_HYDROGEN_0].current_marker_transform;
+      glm::vec3 h0_tag_pos = h0_tag_transform.get_position();
+      h0_tag_transform.set_position(glm::mix(h0_tag_pos, oxygen_pos, pull_factor));
+      
+      Transform h0_smoothed = Transform::smooth_transform(
+        hydrogen_0.atom_sphere.get_transform(),
+        h0_tag_transform,
+        15.0f,
+        delta_time
+      );
+
+      hydrogen_0.atom_sphere.set_transform(h0_smoothed);
+      hydrogen_0.atom_sphere.render(render, ar_camera, light);
+ 
+      Transform h1_tag_transform = detected_tags[MOLECULAEXR_TAG_ID_HYDROGEN_1].current_marker_transform;
+      glm::vec3 h1_tag_pos = h1_tag_transform.get_position();
+      h1_tag_transform.set_position(glm::mix(h1_tag_pos, oxygen_pos, pull_factor));
+      
+      Transform h1_smoothed = Transform::smooth_transform(
+        hydrogen_1.atom_sphere.get_transform(),
+        h1_tag_transform,
+        15.0f,
+        delta_time
+      );
+
+      hydrogen_1.atom_sphere.set_transform(h1_smoothed);
+      hydrogen_1.atom_sphere.render(render, ar_camera, light);
     }
 
     window.swap_buffers();

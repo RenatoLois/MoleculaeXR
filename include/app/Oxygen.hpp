@@ -7,7 +7,7 @@
 class Oxygen: public Atom {
 private:
   inline static glm::vec4 sphere_color = OXYGEN_SPHERE_COLOR;
-  inline static float radius_constant_factor = 8.0f / 10.0f;
+  inline static float radius_constant_factor = 7.0f / 10.0f;
 
 public:
   Oxygen (

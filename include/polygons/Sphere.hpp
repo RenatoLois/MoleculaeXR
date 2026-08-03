@@ -16,6 +16,8 @@ class Sphere {
       int lon_level = 4,
       glm::vec4 sphere_color = {1.0f, 0.0f, 0.0f, 1.0f}
     );
+
+    Transform get_transform() const;
     void set_transform(const Transform& transform);
     void set_color(const glm::vec4& color);
     glm::vec4 get_color() const;

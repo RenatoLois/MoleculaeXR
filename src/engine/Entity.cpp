@@ -13,6 +13,20 @@ Entity::Entity(
 
 
 
+Transform Entity::get_transform() const {
+  return this->transform;
+}
+
+
+
+
+void Entity::set_transform(const Transform& transform) {
+  this->transform = transform;
+}
+
+
+
+
 void Entity::set_translation(glm::vec3 pos) {
   this->transform.set_position(pos);
 }

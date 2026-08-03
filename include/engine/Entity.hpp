@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "engine/Model.hpp"
+#include "engine/Transform.hpp"
 
 
 class Entity {
@@ -19,6 +20,9 @@ public:
     const Transform& transform
   );
   
+  Transform get_transform() const;
+  void set_transform(const Transform& transform);
+
   void set_translation(glm::vec3 pos);
   void set_rotation(glm::quat rotation);
   void set_scale(glm::vec3 scale);
