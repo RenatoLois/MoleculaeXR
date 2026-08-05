@@ -11,6 +11,7 @@
 #include <memory>
 #include <algorithm>
 #include <opencv2/objdetect/aruco_detector.hpp>
+#include <stdio.h>
 
 #define RENDER_ATOM(tag_id, atom_obj) \
   do { \
@@ -62,8 +63,12 @@ int main(int argc, char** argv) {
   }
 
   Window window(640, 480, "MoleculaeXR");
+
+  int cam_id = 0;
+  printf("enter camera id: ");
+  scanf("%d", &cam_id);
   
-  Vision vision(0, cv::aruco::DICT_APRILTAG_36h11);
+  Vision vision(cam_id, cv::aruco::DICT_APRILTAG_36h11);
   
   cv::aruco::DetectorParameters aruco_parameters = vision.get_aruco_params();
   aruco_parameters.cornerRefinementMethod = cv::aruco::CORNER_REFINE_SUBPIX;
